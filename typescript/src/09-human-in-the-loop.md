@@ -752,14 +752,14 @@ Congratulations — you've built a CLI AI agent from scratch. Every line of code
 
 ## What's Next?
 
-Here are some ideas for extending the agent:
+The core learning agent is complete. The next chapters harden it toward OpenCode- and Claude Code-style production behavior:
 
-- **Persistent memory** — Save conversation summaries to disk so the agent remembers past sessions
-- **Custom tools** — Add tools for your specific workflow (database queries, API calls, etc.)
-- **Better approval UX** — Allow editing tool args before approving, or add "always approve this tool" mode
-- **Multi-model support** — Switch between OpenAI, Anthropic, and other providers
-- **Streaming tool results** — Show tool output in real-time instead of waiting for completion
-- **Plugin system** — Let users add tools without modifying the core code
+- **Going to Production** — Understand the remaining gaps and production checklist
+- **Session system** — Save, resume, and inspect durable conversations
+- **Diff-based edits** — Preview file changes before applying them
+- **Permission rules** — Move from "ask every time" to configurable policy
+- **Advanced shell** — Add timeouts, streaming output, and background task foundations
+- **Plugins and MCP** — Load external tools without editing the core registry
 
 The architecture supports all of these. The callback system, tool registry, and message history are designed to be extended.
 
