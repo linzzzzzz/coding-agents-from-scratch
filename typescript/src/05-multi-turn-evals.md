@@ -243,7 +243,11 @@ export async function multiTurnWithMocks(
   ];
 
   const result = await generateText({
-    model: openai(data.config?.model ?? "gpt-5-mini"),
+    model: provider.chat(
+      data.config?.model ??
+        process.env.LLM_MODEL ??
+        "qwen3.5-flash-2026-02-23",
+    ),
     messages,
     tools,
     stopWhen: stepCountIs(data.config?.maxSteps ?? 20),
@@ -327,7 +331,19 @@ The most powerful evaluator uses another LLM to judge the output quality:
 
 ```typescript
 import { generateObject } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { z } from "zod";
+
+const apiKey = process.env.LLM_API_KEY;
+
+if (!apiKey) {
+  throw new Error("Missing LLM_API_KEY in .env");
+}
+
+const provider = createOpenAI({
+  apiKey,
+  baseURL: process.env.LLM_BASE_URL,
+});
 
 const judgeSchema = z.object({
   score: z
@@ -348,14 +364,13 @@ export async function llmJudge(
   target: MultiTurnTarget,
 ): Promise<number> {
   const result = await generateObject({
-    model: openai("gpt-5.1"),
+    model: provider.chat(
+      process.env.LLM_JUDGE_MODEL ??
+        process.env.LLM_MODEL ??
+        "qwen3.5-flash-2026-02-23",
+    ),
     schema: judgeSchema,
     schemaName: "evaluation",
-    providerOptions: {
-      openai: {
-        reasoningEffort: "high",
-      },
-    },
     schemaDescription: "Evaluation of an AI agent response",
     messages: [
       {
@@ -394,7 +409,7 @@ The LLM judge:
 3. Returns a structured score (1-10) with reasoning
 4. Uses `generateObject()` with a Zod schema to guarantee valid output
 
-We use a stronger model (`gpt-5.1`) with high reasoning effort for judging. The judge model should always be at least as capable as the model being tested.
+For judging, set `LLM_JUDGE_MODEL` if you have a stronger OpenAI-compatible model available. The judge model should ideally be at least as capable as the model being tested; otherwise, use the same `LLM_MODEL` and treat judge scores as a helpful signal rather than absolute truth.
 
 ## Test Data
 

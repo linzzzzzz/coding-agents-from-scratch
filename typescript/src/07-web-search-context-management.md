@@ -13,40 +13,109 @@ These are related because web search results can be large, which accelerates con
 
 ## Adding Web Search
 
-OpenAI provides a native web search tool that runs on their infrastructure. We don't need to build a search engine or call a third-party API — we just activate it.
+OpenAI provides a native web search tool, but many OpenAI-compatible Chat Completions providers do not expose that AI SDK provider tool. For the provider-compatible path, we'll build web search as a normal local tool that calls a search API from our own code.
+
+> Prefer the original OpenAI-native `webSearch` provider tool? It is preserved in [`07-web-search-context-management.original-openai.md`](./07-web-search-context-management.original-openai.md).
+
+Add a search API key to `.env`:
+
+```env
+EXA_API_KEY=your-exa-api-key-here
+```
 
 Create `src/agent/tools/webSearch.ts`:
 
 ```typescript
-import { openai } from "@ai-sdk/openai";
+import { tool } from "ai";
+import { z } from "zod";
 
 /**
- * OpenAI native web search tool
- *
- * This is a provider tool - execution is handled by OpenAI, not our tool executor.
- * Results are returned directly in the model's response stream.
+ * Provider-agnostic web search tool.
+ * Requires an Exa API key in EXA_API_KEY.
  */
-export const webSearch = openai.tools.webSearch({});
+export const webSearch = tool({
+  description:
+    "Search the web for current information. Use this when the answer depends on recent or external information.",
+  inputSchema: z.object({
+    query: z.string().describe("The web search query"),
+  }),
+  execute: async ({ query }: { query: string }) => {
+    const apiKey = process.env.EXA_API_KEY;
+    if (!apiKey) {
+      return "Error: Missing EXA_API_KEY. Add it to .env to enable web search.";
+    }
+
+    const response = await fetch("https://api.exa.ai/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+      },
+      body: JSON.stringify({
+        query,
+        type: "auto",
+        numResults: 5,
+        contents: {
+          highlights: {
+            numSentences: 3,
+          },
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      return `Error searching web: ${response.status} ${response.statusText}`;
+    }
+
+    const data = (await response.json()) as {
+      results?: Array<{
+        title?: string;
+        url?: string;
+        publishedDate?: string;
+        highlights?: string[];
+        text?: string;
+      }>;
+    };
+
+    const results = data.results ?? [];
+    if (results.length === 0) {
+      return `No results found for: ${query}`;
+    }
+
+    return results
+      .map((result, index) =>
+        [
+          `${index + 1}. ${result.title ?? "Untitled"}`,
+          result.url,
+          result.publishedDate ? `Published: ${result.publishedDate}` : undefined,
+          result.highlights?.join("\n") ?? result.text,
+        ]
+          .filter(Boolean)
+          .join("\n"),
+      )
+      .join("\n\n");
+  },
+});
 ```
 
-That's it. One line of actual code.
+This is a regular local tool, so our code executes the search request and returns text back to the model.
 
 ### Provider Tools vs. Local Tools
 
-This is fundamentally different from our file tools. With `readFile`, the LLM says "call readFile" and our code runs `fs.readFile()`. With `webSearch`:
+Provider tools are fundamentally different from our local tools. With `readFile`, the LLM says "call readFile" and our code runs `fs.readFile()`. With this provider-compatible `webSearch`, the flow is similar:
 
-1. Our code tells the OpenAI API that web search is available
+1. Our code tells the model that `webSearch` is available
 2. The LLM decides to search
-3. **OpenAI runs the search on their servers**
-4. Results come back in the response stream
+3. **Our tool code calls Exa**
+4. Results come back as a tool result
 5. The LLM processes them and continues
 
-We never see the raw search results. We never execute anything. The tool is handled entirely by the provider. That's why our `executeTool` function has this check:
+Because this version is a local tool, we do see the raw search results and our `executeTool` function can execute it. The provider-tool check still matters if you later add OpenAI-native tools:
 
 ```typescript
 const execute = tool.execute;
 if (!execute) {
-  // Provider tools (like webSearch) are executed by OpenAI, not us
+  // Provider tools are executed by the model provider, not us
   return `Provider tool ${name} - executed by model provider`;
 }
 ```
@@ -89,7 +158,7 @@ import type { ModelMessage } from "ai";
 
 /**
  * Filter conversation history to only include compatible message formats.
- * Provider tools (like webSearch) may return messages with formats that
+ * Provider tools may return messages with formats that
  * cause issues when passed back to subsequent API calls.
  */
 export const filterCompatibleMessages = (
@@ -240,15 +309,10 @@ export const DEFAULT_THRESHOLD = 0.8;
  * Model limits registry
  */
 const MODEL_LIMITS: Record<string, ModelLimits> = {
-  "gpt-5": {
-    inputLimit: 272000,
-    outputLimit: 128000,
-    contextWindow: 400000,
-  },
-  "gpt-5-mini": {
-    inputLimit: 272000,
-    outputLimit: 128000,
-    contextWindow: 400000,
+  "qwen3.5-flash-2026-02-23": {
+    inputLimit: 1000000,
+    outputLimit: 66000,
+    contextWindow: 1000000,
   },
 };
 
@@ -256,9 +320,9 @@ const MODEL_LIMITS: Record<string, ModelLimits> = {
  * Default limits used when model is not found in registry
  */
 const DEFAULT_LIMITS: ModelLimits = {
-  inputLimit: 128000,
+  inputLimit: 1000000,
   outputLimit: 16000,
-  contextWindow: 128000,
+  contextWindow: 1000000,
 };
 
 /**
@@ -272,8 +336,8 @@ export function getModelLimits(model: string): ModelLimits {
   }
 
   // Check for variants
-  if (model.startsWith("gpt-5")) {
-    return MODEL_LIMITS["gpt-5"];
+  if (model.startsWith("qwen")) {
+    return MODEL_LIMITS["qwen3.5-flash-2026-02-23"];
   }
 
   return DEFAULT_LIMITS;
@@ -309,8 +373,19 @@ When the conversation gets too long, we summarize it. Create `src/agent/context/
 
 ```typescript
 import { generateText, type ModelMessage } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { extractMessageText } from "./tokenEstimator.ts";
+
+const apiKey = process.env.LLM_API_KEY;
+
+if (!apiKey) {
+  throw new Error("Missing LLM_API_KEY in .env");
+}
+
+const provider = createOpenAI({
+  apiKey,
+  baseURL: process.env.LLM_BASE_URL,
+});
 
 const SUMMARIZATION_PROMPT = `You are a conversation summarizer. Your task is to create a concise summary of the conversation so far that preserves:
 
@@ -349,7 +424,7 @@ function messagesToText(messages: ModelMessage[]): string {
  */
 export async function compactConversation(
   messages: ModelMessage[],
-  model: string = "gpt-5-mini",
+  model: string = process.env.LLM_MODEL ?? "qwen3.5-flash-2026-02-23",
 ): Promise<ModelMessage[]> {
   // Filter out system messages - they're handled separately
   const conversationMessages = messages.filter((m) => m.role !== "system");
@@ -361,7 +436,7 @@ export async function compactConversation(
   const conversationText = messagesToText(conversationMessages);
 
   const { text: summary } = await generateText({
-    model: openai(model),
+    model: provider.chat(model),
     prompt: SUMMARIZATION_PROMPT + conversationText,
   });
 
@@ -503,11 +578,131 @@ Turn 22: Fresh context with full summary → 1,000 tokens used
 
 The user doesn't notice anything different. The agent maintains context through the summary and keeps working. It's like a human taking notes during a long meeting — you can't remember every word, but you captured the key points.
 
+## Testing Chapter 7
+
+You can test this chapter with four quick checks: direct Exa connectivity, web search behavior, token reporting, and forced compaction.
+
+### 1. Check Exa Connectivity
+
+Before testing the full agent, make sure your API key works:
+
+```bash
+node --env-file=.env -e '
+const response = await fetch("https://api.exa.ai/search", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-api-key": process.env.EXA_API_KEY,
+  },
+  body: JSON.stringify({
+    query: "latest TypeScript release",
+    type: "auto",
+    numResults: 2,
+    contents: { highlights: { numSentences: 2 } },
+  }),
+});
+
+console.log(response.status, response.statusText);
+console.log(await response.text());
+'
+```
+
+You should see `200 OK` and a JSON response with a `results` array.
+
+### 2. Manually Test Web Search
+
+If your `src/index.ts` still uses a hardcoded prompt, change the string passed to `runAgent()`:
+
+```typescript
+await runAgent(
+  "Search the web for the latest TypeScript release and summarize what changed.",
+  history,
+  {
+    // callbacks...
+  },
+);
+```
+
+Then run the agent:
+
+```bash
+npm run start
+```
+
+Expected behavior:
+
+1. The model calls `webSearch`
+2. The tool returns Exa results
+3. The model answers using those results
+
+If you see `Missing EXA_API_KEY`, add `EXA_API_KEY` to `.env` and restart the process.
+
+### 3. Manually Test Context Reporting
+
+To see the token count grow, `src/index.ts` needs to run more than one turn and reuse the returned history. Replace the single `runAgent()` call with this two-turn test:
+
+```typescript
+let history: ModelMessage[] = [];
+
+const prompts = [
+  "Search the web for three recent AI agent frameworks and compare them.",
+  "Search for recent documentation about one of those frameworks and explain the install steps.",
+];
+
+for (const [index, prompt] of prompts.entries()) {
+  console.log(`\n=== Turn ${index + 1} ===`);
+
+  history = await runAgent(prompt, history, {
+    // callbacks...
+  });
+}
+```
+
+The key line is:
+
+```typescript
+history = await runAgent(prompt, history, callbacks);
+```
+
+The first turn starts with an empty history. The second turn receives the messages returned from the first turn, so the estimated token count should be much larger.
+
+Run it:
+
+```bash
+npm run start
+```
+
+You should see token usage updates through `callbacks.onTokenUsage` if your UI renders it. For example, turn 1 might show a small token count, while turn 2 jumps because it includes the first answer and web search results.
+
+The exact token number is approximate because our estimator uses character counts. What matters is that the number increases as the conversation grows.
+
+### 4. Force a Compaction Test
+
+Waiting for a real conversation to hit 80% of a 1M-token context window is not practical. Temporarily lower the limits in `src/agent/context/modelLimits.ts`:
+
+```typescript
+const DEFAULT_LIMITS: ModelLimits = {
+  inputLimit: 2000,
+  outputLimit: 1000,
+  contextWindow: 2000,
+};
+```
+
+Then run:
+
+```bash
+npm run start
+```
+
+Ask for several long responses or web searches. Once the estimated usage crosses the threshold, `compactConversation()` should run and replace older messages with a summary.
+
+After testing, change the limits back to the real model values.
+
 ## Summary
 
 In this chapter you:
 
-- Added web search as a provider tool (one line of code!)
+- Added web search as a local tool that works with OpenAI-compatible chat models
 - Built message filtering for provider tool compatibility
 - Implemented token estimation and context window tracking
 - Created conversation compaction via LLM summarization

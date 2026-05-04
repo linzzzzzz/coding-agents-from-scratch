@@ -1,10 +1,8 @@
-# Building CLI AI Agents from Scratch — Python Edition
+# Building Production AI Coding Agents from Scratch — Python Edition
 
-A hands-on guide to building a fully functional AI agent with tool calling, evaluations, context management, and human-in-the-loop safety — all from scratch using Python.
+A hands-on guide to building a practical CLI coding agent with tool calling, evaluations, context management, OpenAI-compatible providers, and human-in-the-loop safety — all from scratch using Python.
 
-> Inspired by and adapted from [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2) and the [AI Agents v2 course on Frontend Masters](https://frontendmasters.com/courses/ai-agents-v2/) by Scott Moss. The original course builds the agent in TypeScript; this edition reimagines the same architecture in Python.
-
-> 💻 **Companion code repo:** [sivakarasala/building-ai-agents-python](https://github.com/sivakarasala/building-ai-agents-python). The repo has one branch per chapter — check out `01-intro-to-agents` to start, work through each lesson, and compare against the `done` branch for the finished app.
+> Inspired by [sivakarasala/building-ai-agents](https://github.com/sivakarasala/building-ai-agents), [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2), [OpenCode](https://opencode.ai/), and [Claude Code](https://code.claude.com/docs/en/overview). This version expands the learning path toward production coding-agent behavior, OpenAI-compatible providers, clearer instructions, bug fixes, and a revamped web experience.
 
 ---
 
@@ -23,7 +21,7 @@ By the end of this book, you'll have a working CLI AI agent that can:
 ## Tech Stack
 
 - **Python 3.11+** — Modern Python with type hints
-- **OpenAI SDK** — Direct API access with streaming and tool calling
+- **OpenAI-compatible API client** — Direct API access with streaming and tool calling
 - **Pydantic** — Schema validation for tool parameters
 - **Rich** — Beautiful terminal output and formatting
 - **Prompt Toolkit** — Interactive terminal input
@@ -33,7 +31,7 @@ By the end of this book, you'll have a working CLI AI agent that can:
 
 **Required:**
 - Python 3.11+
-- An OpenAI API key ([platform.openai.com](https://platform.openai.com))
+- An API key from OpenAI or another OpenAI-compatible provider
 - Basic Python knowledge (functions, classes, async/await, imports)
 - Comfort running commands in a terminal (`pip install`, `python`)
 

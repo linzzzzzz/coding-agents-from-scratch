@@ -120,11 +120,22 @@ Now create `evals/executors.ts`:
 
 ```typescript
 import { generateText, stepCountIs, type ModelMessage, type ToolSet } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { createOpenAI } from "@ai-sdk/openai";
 
 import { SYSTEM_PROMPT } from "../src/agent/system/prompt.ts";
 import type { EvalData, SingleTurnResult } from "./types.ts";
 import { buildMessages } from "./utils.ts";
+
+const apiKey = process.env.LLM_API_KEY;
+
+if (!apiKey) {
+  throw new Error("Missing LLM_API_KEY in .env");
+}
+
+const provider = createOpenAI({
+  apiKey,
+  baseURL: process.env.LLM_BASE_URL,
+});
 
 export async function singleTurnExecutor(
   data: EvalData,
@@ -141,7 +152,11 @@ export async function singleTurnExecutor(
   }
 
   const result = await generateText({
-    model: openai(data.config?.model ?? "gpt-5-mini"),
+    model: provider.chat(
+      data.config?.model ??
+        process.env.LLM_MODEL ??
+        "qwen3.5-flash-2026-02-23",
+    ),
     messages,
     tools,
     stopWhen: stepCountIs(1), // Single step - just get tool selection
@@ -380,7 +395,7 @@ You'll see output showing pass/fail for each test case and each evaluator. The L
 Evals might seem like overhead, but they save enormous time:
 
 1. **Catch regressions**: Change the system prompt? Run evals to make sure tool selection still works.
-2. **Compare models**: Switch from gpt-5-mini to another model? Evals tell you if it's better or worse.
+2. **Compare models**: Switch from `qwen3.5-flash-2026-02-23` to another model? Evals tell you if it's better or worse.
 3. **Guide prompt engineering**: If `toolsAvoided` fails, your tool descriptions are too broad. If `toolsSelected` fails, they're too narrow.
 4. **Build confidence**: Before adding features, know that the foundation is solid.
 

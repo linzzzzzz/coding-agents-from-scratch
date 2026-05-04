@@ -83,7 +83,7 @@ Here's what each does:
 | Package | Purpose |
 |---------|---------|
 | `ai` | Vercel's AI SDK — unified interface for LLM calls, streaming, tool calling |
-| `@ai-sdk/openai` | OpenAI provider for the AI SDK |
+| `@ai-sdk/openai` | OpenAI-compatible provider for the AI SDK |
 | `react` + `ink` | React renderer for the terminal (like React Native, but for CLI) |
 | `zod` | Schema validation — used to define tool parameter shapes |
 | `shelljs` | Cross-platform shell command execution |
@@ -189,11 +189,15 @@ This extends the base tsconfig but enables emitting compiled JavaScript to `dist
 Create a `.env` file with all the API keys you'll need throughout the book:
 
 ```
-OPENAI_API_KEY=your-openai-api-key-here
+LLM_API_KEY=your-api-key-here
+LLM_MODEL=qwen3.5-flash-2026-02-23
+LLM_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
 LMNR_API_KEY=your-laminar-api-key-here
 ```
 
-- **`OPENAI_API_KEY`** — Required. Get one from [platform.openai.com](https://platform.openai.com). Used for all LLM calls.
+- **`LLM_API_KEY`** — Required. Use an API key from OpenAI or another OpenAI-compatible provider.
+- **`LLM_MODEL`** — Required. The model name to call.
+- **`LLM_BASE_URL`** — Required for non-default providers. For OpenAI directly, leave this unset. For another compatible provider, set it to that provider's API base URL, usually ending in `/v1`.
 - **`LMNR_API_KEY`** — Optional but recommended. Get one from [laminar.ai](https://www.lmnr.ai). Used for running evaluations in Chapters 3, 5, and 8. Evals will still run locally without it, but results won't be tracked over time.
 
 And add it to `.gitignore`:
@@ -217,12 +221,25 @@ mkdir -p src/ui/components
 
 Let's make sure everything works. Create `src/index.ts`:
 
+> Prefer the original OpenAI-only setup? It is preserved in [`01-intro-to-agents.original-openai.md`](./01-intro-to-agents.original-openai.md).
+
 ```typescript
 import { generateText } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { createOpenAI } from "@ai-sdk/openai";
+
+const apiKey = process.env.LLM_API_KEY;
+
+if (!apiKey) {
+  throw new Error("Missing LLM_API_KEY in .env");
+}
+
+const provider = createOpenAI({
+  apiKey,
+  baseURL: process.env.LLM_BASE_URL,
+});
 
 const result = await generateText({
-  model: openai("gpt-5-mini"),
+  model: provider.chat(process.env.LLM_MODEL ?? "qwen3.5-flash-2026-02-23"),
   prompt: "What is an AI agent in one sentence?",
 });
 
@@ -253,7 +270,7 @@ The Vercel AI SDK (`ai` package) is the foundation we'll build on. It provides:
 - **`tool()`** — Define tools the LLM can call
 - **`generateObject()`** — Get structured JSON output (we'll use this for evals)
 
-The SDK abstracts away the provider-specific details. We use `@ai-sdk/openai` as our provider, but the code would work with Anthropic, Google, or any other supported provider with minimal changes.
+The SDK abstracts away the provider-specific details. We use `@ai-sdk/openai` as our provider because it works with OpenAI and with many OpenAI-compatible APIs. The `.chat(...)` call is intentional: it uses the Chat Completions API, which is the endpoint most OpenAI-compatible vendors support. If you use OpenAI directly, leave `LLM_BASE_URL` unset. If you use another compatible provider, set `LLM_BASE_URL` to that provider's API base URL and set `LLM_MODEL` to one of its model names.
 
 ## Adding a System Prompt
 

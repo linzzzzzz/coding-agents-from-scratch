@@ -1,6 +1,5 @@
 # Chapter 9: Human-in-the-Loop
 
-> 💻 **Code:** start from the [`09-hitl`](https://github.com/sivakarasala/building-ai-agents-python/tree/09-hitl) branch of the [companion repo](https://github.com/sivakarasala/building-ai-agents-python). The branch's `notes/09-HITL.md` has the code you'll write in this chapter. The finished app is on the [`done`](https://github.com/sivakarasala/building-ai-agents-python/tree/done) branch.
 
 ## The Safety Layer
 

@@ -1,6 +1,5 @@
 # Chapter 1: Introduction to AI Agents
 
-> 💻 **Code:** start from the [`01-intro-to-agents`](https://github.com/sivakarasala/building-ai-agents-python/tree/01-intro-to-agents) branch of the [companion repo](https://github.com/sivakarasala/building-ai-agents-python). The branch's `notes/01-Intro-to-Agents.md` has the code you'll write in this chapter.
 
 ## What is an AI Agent?
 
@@ -114,11 +113,15 @@ This lets users install the agent with `pip install .` and run it as `agi` from 
 Create a `.env` file with all the API keys you'll need throughout the book:
 
 ```
-OPENAI_API_KEY=your-openai-api-key-here
+LLM_API_KEY=your-provider-api-key-here
+LLM_MODEL=your-model-name-here
+LLM_BASE_URL=https://api.openai.com/v1
 LMNR_API_KEY=your-laminar-api-key-here
 ```
 
-- **`OPENAI_API_KEY`** — Required. Get one from [platform.openai.com](https://platform.openai.com). Used for all LLM calls.
+- **`LLM_API_KEY`** — Required. Use an API key from OpenAI or another OpenAI-compatible provider.
+- **`LLM_MODEL`** — Required. The model name to call.
+- **`LLM_BASE_URL`** — Required for non-default providers. For OpenAI directly, use `https://api.openai.com/v1`; for another compatible provider, use that provider's API base URL.
 - **`LMNR_API_KEY`** — Optional but recommended. Get one from [laminar.ai](https://www.lmnr.ai). Used for running evaluations in Chapters 3, 5, and 8. Evals will still run locally without it, but results won't be tracked over time.
 
 And add it to `.gitignore`:

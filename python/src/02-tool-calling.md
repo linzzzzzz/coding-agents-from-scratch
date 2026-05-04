@@ -1,6 +1,5 @@
 # Chapter 2: Tool Calling
 
-> 💻 **Code:** start from the [`02-tool-calling`](https://github.com/sivakarasala/building-ai-agents-python/tree/02-tool-calling) branch of the [companion repo](https://github.com/sivakarasala/building-ai-agents-python). The branch's `notes/02-Tool-Calling.md` has the code you'll write in this chapter.
 
 ## How Tool Calling Works
 

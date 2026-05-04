@@ -1,8 +1,8 @@
 [book]
-authors = ["Siva Karasala"]
+authors = ["Course Maintainers"]
 language = "en"
 src = "src"
-title = "Building AI Agents — Python Edition"
+title = "Building Production AI Coding Agents — Python Edition"
 
 [build]
 build-dir = "../docs/python"
@@ -10,5 +10,4 @@ build-dir = "../docs/python"
 [output.html]
 default-theme = "navy"
 preferred-dark-theme = "navy"
-git-repository-url = "https://github.com/sivakarasala/building-ai-agents"
 additional-css = ["../theme/custom.css"]

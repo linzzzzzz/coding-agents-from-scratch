@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Building AI Agents from Scratch</title>
+    <title>Building Production AI Coding Agents from Scratch</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -18,34 +18,106 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1040px;
             width: 100%;
             padding: 2rem;
         }
 
         header {
-            text-align: center;
             padding: 4rem 0 2rem;
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             color: #f0f6fc;
             margin-bottom: 1rem;
-            line-height: 1.2;
+            line-height: 1.08;
+            max-width: 760px;
         }
 
         .subtitle {
             font-size: 1.15rem;
             color: #8b949e;
-            max-width: 600px;
-            margin: 0 auto;
+            max-width: 760px;
             line-height: 1.6;
         }
 
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .eyebrow {
+            color: #56d364;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-top: 1.5rem;
+        }
+
+        .pill {
+            border: 1px solid #30363d;
+            border-radius: 999px;
+            color: #c9d1d9;
+            background: #161b22;
+            font-size: 0.85rem;
+            padding: 0.45rem 0.75rem;
+        }
+
+        .terminal {
+            background: #010409;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+            overflow: hidden;
+        }
+
+        .terminal-bar {
+            display: flex;
+            gap: 0.45rem;
+            align-items: center;
+            height: 2.25rem;
+            padding: 0 0.9rem;
+            border-bottom: 1px solid #21262d;
+            background: #0d1117;
+        }
+
+        .dot {
+            width: 0.72rem;
+            height: 0.72rem;
+            border-radius: 50%;
+            background: #58a6ff;
+        }
+
+        .dot:nth-child(2) { background: #f0883e; }
+        .dot:nth-child(3) { background: #56d364; }
+
+        .terminal pre {
+            margin: 0;
+            padding: 1.3rem;
+            white-space: pre-wrap;
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: #c9d1d9;
+        }
+
+        .prompt { color: #56d364; }
+        .muted { color: #8b949e; }
+        .accent { color: #58a6ff; }
+
         .editions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            grid-template-columns: repeat(2, minmax(260px, 1fr));
             gap: 1.5rem;
             margin-top: 3rem;
         }
@@ -53,7 +125,7 @@
         .card {
             background: #161b22;
             border: 1px solid #30363d;
-            border-radius: 12px;
+            border-radius: 8px;
             padding: 2rem;
             text-decoration: none;
             color: inherit;
@@ -112,7 +184,7 @@
             padding: 2rem;
             background: #161b22;
             border: 1px solid #30363d;
-            border-radius: 12px;
+            border-radius: 8px;
         }
 
         .features h2 {
@@ -159,8 +231,35 @@
             text-decoration: underline;
         }
 
+        .source-note {
+            margin-top: 3rem;
+            padding: 1.25rem 0;
+            border-top: 1px solid #30363d;
+            border-bottom: 1px solid #30363d;
+            color: #8b949e;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .source-note strong {
+            color: #f0f6fc;
+        }
+
+        .source-note a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+
+        .source-note a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 820px) {
+            .hero-grid { grid-template-columns: 1fr; }
+        }
+
         @media (max-width: 600px) {
-            h1 { font-size: 1.8rem; }
+            h1 { font-size: 2rem; }
             .editions { grid-template-columns: 1fr; }
             .container { padding: 1rem; }
             header { padding: 2rem 0 1rem; }
@@ -170,10 +269,33 @@
 <body>
     <div class="container">
         <header>
-            <h1>Building AI Agents<br>from Scratch</h1>
-            <p class="subtitle">
-                A hands-on guide to building a fully functional CLI AI agent with tool calling, streaming, evaluations, context management, and human-in-the-loop safety. Available in five languages — plus a vibe-coding edition for product roles.
-            </p>
+            <div class="hero-grid">
+                <div>
+                    <p class="eyebrow">From toy agent to practical coding agent</p>
+                    <h1>Building Production AI Coding Agents from Scratch</h1>
+                    <p class="subtitle">
+                        A hands-on course for building CLI coding agents with tool calling, streaming, evals, context management, filesystem access, shell execution, human approval, and OpenAI-compatible provider support.
+                    </p>
+                    <div class="pill-row">
+                        <span class="pill">OpenAI-compatible providers</span>
+                        <span class="pill">Production safety patterns</span>
+                        <span class="pill">Inspired by OpenCode and Claude Code</span>
+                    </div>
+                </div>
+                <div class="terminal" aria-label="Terminal preview of an AI coding agent">
+                    <div class="terminal-bar">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                    <pre><span class="prompt">$ agent "add a guarded shell tool"</span>
+<span class="muted">reading repo context...</span>
+<span class="accent">tool:</span> list_files src/agent
+<span class="accent">tool:</span> edit_file src/agent/tools/shell.ts
+<span class="accent">approval:</span> required before command execution
+<span class="muted">tests passed. ready for review.</span></pre>
+                </div>
+            </div>
         </header>
 
         <div class="editions">
@@ -189,40 +311,8 @@
                 <div class="card-icon">PY</div>
                 <span class="lang-tag tag-py">Python</span>
                 <h2>Python Edition</h2>
-                <p>Uses the OpenAI SDK, dataclasses, and Rich + Prompt Toolkit for UI. The most approachable path to understanding agents.</p>
+                <p>Uses OpenAI-compatible API patterns, dataclasses, and Rich + Prompt Toolkit for UI. The most approachable path to understanding agents.</p>
                 <div class="chapters">10 chapters</div>
-            </a>
-
-            <a href="rust/index.html" class="card">
-                <div class="card-icon">RS</div>
-                <span class="lang-tag tag-rs">Rust</span>
-                <h2>Rust Edition</h2>
-                <p>Raw HTTP with reqwest. Manual SSE parsing. Trait objects for tool dispatch. Ratatui for terminal UI. No SDK, full control.</p>
-                <div class="chapters">10 chapters + 5 appendices</div>
-            </a>
-
-            <a href="go/index.html" class="card">
-                <div class="card-icon">GO</div>
-                <span class="lang-tag tag-go">Go</span>
-                <h2>Go Edition</h2>
-                <p>Standard library net/http. Goroutines and channels for the agent loop. Bubble Tea for terminal UI. Single static binary, no framework.</p>
-                <div class="chapters">10 chapters</div>
-            </a>
-
-            <a href="java/index.html" class="card">
-                <div class="card-icon">JV</div>
-                <span class="lang-tag tag-java">Java 21</span>
-                <h2>Java Edition</h2>
-                <p>java.net.http.HttpClient with Jackson. Sealed types and records. Virtual threads for concurrency. Lanterna for terminal UI.</p>
-                <div class="chapters">10 chapters</div>
-            </a>
-
-            <a href="vibe-coding/index.html" class="card">
-                <div class="card-icon">VC</div>
-                <span class="lang-tag tag-vibe">Vibe Coding</span>
-                <h2>Vibe Coding Edition</h2>
-                <p>For product managers, owners, and analysts. Build the same Python agent by guiding a coding agent through prompts — no programming required.</p>
-                <div class="chapters">Chapters 0-3 available</div>
             </a>
         </div>
 
@@ -238,13 +328,24 @@
                 <li>Context window management</li>
                 <li>Human-in-the-loop approval</li>
                 <li>Terminal UI with real-time streaming</li>
+                <li>OpenAI-compatible provider configuration</li>
                 <li>Production readiness patterns</li>
+                <li>Clearer setup notes and bug fixes</li>
             </ul>
         </div>
 
+        <div class="source-note">
+            <strong>Lineage:</strong>
+            This course is inspired by
+            <a href="https://github.com/sivakarasala/building-ai-agents">sivakarasala/building-ai-agents</a>,
+            <a href="https://github.com/Hendrixer/agents-v2">Hendrixer/agents-v2</a>,
+            <a href="https://opencode.ai/">OpenCode</a>, and
+            <a href="https://code.claude.com/docs/en/overview">Claude Code</a>.
+            This version expands the learning path with production-oriented topics, provider flexibility, clearer instructions, minor fixes, and a refreshed web experience.
+        </div>
+
         <footer>
-            <p>Built by <a href="https://github.com/sivakarasala">Siva Karasala</a> | <a href="https://github.com/sivakarasala/building-ai-agents">Source on GitHub</a></p>
-            <p style="margin-top: 0.75rem;">Inspired by and adapted from <a href="https://github.com/Hendrixer/agents-v2">Hendrixer/agents-v2</a> and the <a href="https://frontendmasters.com/courses/ai-agents-v2/">AI Agents v2 course on Frontend Masters</a> by Scott Moss.</p>
+            <p>Built for engineers who want to understand coding agents by implementing them.</p>
         </footer>
     </div>
 </body>

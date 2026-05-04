@@ -1,6 +1,5 @@
 # Chapter 7: Web Search & Context Management
 
-> 💻 **Code:** start from the [`07-web-search-context-management`](https://github.com/sivakarasala/building-ai-agents-python/tree/07-web-search-context-management) branch of the [companion repo](https://github.com/sivakarasala/building-ai-agents-python). The branch's `notes/07-Web-Search-Context-Management.md` has the code you'll write in this chapter.
 
 ## Two Problems, One Chapter
 

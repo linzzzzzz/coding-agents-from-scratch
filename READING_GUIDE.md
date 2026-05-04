@@ -2,21 +2,18 @@
 
 Suggested reading order based on your background.
 
-> Inspired by and adapted from [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2) and the [AI Agents v2 course on Frontend Masters](https://frontendmasters.com/courses/ai-agents-v2/) by Scott Moss.
+> Inspired by [sivakarasala/building-ai-agents](https://github.com/sivakarasala/building-ai-agents), [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2), [OpenCode](https://opencode.ai/), and [Claude Code](https://code.claude.com/docs/en/overview). This version expands the learning path toward production coding-agent behavior, OpenAI-compatible providers, clearer instructions, bug fixes, and a revamped web experience.
 
 ## If You're Picking One Edition
 
-- **[TypeScript](https://sivakarasala.github.io/building-ai-agents/typescript/)** — Most polished path. Uses the Vercel AI SDK, React+Ink for UI. Best if you want to ship something fast.
-- **[Python](https://sivakarasala.github.io/building-ai-agents/python/)** — Most approachable. OpenAI SDK, Rich+Prompt Toolkit. Good if you want the clearest mental model of how agents work.
-- **[Rust](https://sivakarasala.github.io/building-ai-agents/rust/)** — Deepest understanding. Raw HTTP, manual SSE parsing, no SDK. Best if you want to know every byte flowing between your agent and the API.
+- **TypeScript** — Most polished path. Uses the Vercel AI SDK, Zod schemas, and React + Ink for UI. Best if you want to ship something fast.
+- **Python** — Most approachable. Uses OpenAI-compatible API patterns, Rich, and Prompt Toolkit. Good if you want the clearest mental model of how agents work.
 
-## If You're Going Through All Three
+## If You're Going Through Both
 
 **Start with Python** — It has the least friction. You'll internalize the agent concepts (tool calling, agent loop, evals, context management, HITL) without fighting language mechanics.
 
 **Then TypeScript** — The concepts are now familiar, so you can focus on the framework differences (Zod schemas, React+Ink UI, streaming iterators). You'll notice how the SDK abstracts away things you did manually in Python.
-
-**Finish with Rust** — By now you know *what* the agent does. The Rust edition teaches you *how* it works at the lowest level. SSE parsing, trait objects, ownership in async loops. The appendices (A-E) fill in Rust-specific gaps.
 
 ## Recommended Reading (Chapter 10)
 
@@ -31,4 +28,4 @@ Pick based on what you're building next — the first two are the most impactful
 
 ## Key Insight
 
-Each edition teaches the same architecture from a different angle. Going through more than one isn't repetitive — it's reinforcing.
+The two editions teach the same architecture from different angles. Going through both isn't repetitive — Python builds the mental model, and TypeScript shows how the same ideas feel in a modern coding-agent toolchain.

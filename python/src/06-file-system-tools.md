@@ -1,6 +1,5 @@
 # Chapter 6: File System Tools
 
-> 💻 **Code:** start from the [`06-file-system-tools`](https://github.com/sivakarasala/building-ai-agents-python/tree/06-file-system-tools) branch of the [companion repo](https://github.com/sivakarasala/building-ai-agents-python). The branch's `notes/06-File-System-Tools.md` has the code you'll write in this chapter.
 
 ## Giving the Agent Hands
 

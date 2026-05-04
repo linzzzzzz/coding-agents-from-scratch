@@ -31,7 +31,7 @@ In Chapter 2, we used `generateText()` which waits for the complete response bef
 
 ```typescript
 const result = streamText({
-  model: openai("gpt-5-mini"),
+  model,
   messages,
   tools,
 });
@@ -56,7 +56,7 @@ Create `src/agent/run.ts`:
 
 ```typescript
 import { streamText, type ModelMessage } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { getTracer } from "@lmnr-ai/lmnr";
 import { tools } from "./tools/index.ts";
 import { executeTool } from "./executeTool.ts";
@@ -69,7 +69,18 @@ Laminar.initialize({
   projectApiKey: process.env.LMNR_API_KEY,
 });
 
-const MODEL_NAME = "gpt-5-mini";
+const apiKey = process.env.LLM_API_KEY;
+
+if (!apiKey) {
+  throw new Error("Missing LLM_API_KEY in .env");
+}
+
+const provider = createOpenAI({
+  apiKey,
+  baseURL: process.env.LLM_BASE_URL,
+});
+
+const MODEL_NAME = process.env.LLM_MODEL ?? "qwen3.5-flash-2026-02-23";
 
 export async function runAgent(
   userMessage: string,
@@ -86,7 +97,7 @@ export async function runAgent(
 
   while (true) {
     const result = streamText({
-      model: openai(MODEL_NAME),
+      model: provider.chat(MODEL_NAME),
       messages,
       tools,
       experimental_telemetry: {

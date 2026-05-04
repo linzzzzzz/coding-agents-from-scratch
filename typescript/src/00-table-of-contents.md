@@ -1,10 +1,10 @@
-# Building CLI AI Agents from Scratch
+# Building Production AI Coding Agents from Scratch
 
-A hands-on guide to building a fully functional AI agent with tool calling, evaluations, context management, and human-in-the-loop safety — all from scratch using TypeScript.
+A hands-on guide to building a practical CLI coding agent with tool calling, evaluations, context management, OpenAI-compatible providers, and human-in-the-loop safety — all from scratch using TypeScript.
 
-> Inspired by and adapted from [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2) and the [AI Agents v2 course on Frontend Masters](https://frontendmasters.com/courses/ai-agents-v2/) by Scott Moss.
+> Inspired by [sivakarasala/building-ai-agents](https://github.com/sivakarasala/building-ai-agents), [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2), [OpenCode](https://opencode.ai/), and [Claude Code](https://code.claude.com/docs/en/overview). This version expands the learning path toward production coding-agent behavior, OpenAI-compatible providers, clearer instructions, bug fixes, and a revamped web experience.
 
-> 💻 **Companion code repo:** [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2). The repo has one branch per chapter — check out `lesson-01` to start, and each `lesson-XX` branch is the starter for chapter XX (i.e. the completed state of the previous chapter). The `done` branch has the finished app.
+> 💻 **Upstream reference repo:** [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2). This course expands from that foundation with provider-flexible configuration, additional production notes, clearer instructions, and fixes discovered while working through the material.
 
 ---
 
@@ -24,7 +24,7 @@ By the end of this book, you'll have a working CLI AI agent that can:
 
 - **TypeScript** — Type-safe development
 - **Vercel AI SDK** — Universal LLM interface with streaming and tool calling
-- **OpenAI** — LLM provider (gpt-5-mini)
+- **OpenAI-compatible provider** — LLM access through a configurable API key, model, and base URL
 - **React + Ink** — Terminal UI framework
 - **Zod** — Schema validation for tool parameters
 - **ShellJS** — Cross-platform shell commands
@@ -34,7 +34,7 @@ By the end of this book, you'll have a working CLI AI agent that can:
 
 **Required:**
 - Node.js 20+
-- An OpenAI API key ([platform.openai.com](https://platform.openai.com))
+- An API key from OpenAI or another OpenAI-compatible provider
 - Basic TypeScript/JavaScript knowledge (variables, functions, async/await, imports)
 - Comfort running commands in a terminal (`npm install`, `npm run`)
 

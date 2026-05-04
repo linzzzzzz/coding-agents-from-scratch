@@ -12,11 +12,15 @@ This chapter covers what's missing and how to close each gap. We won't implement
 
 ### The Problem
 
-API calls fail. OpenAI returns 429 (rate limit), 500 (server error), or just times out. Right now, one failed `streamText()` call crashes the entire agent.
+API calls fail. Your model provider can return 429 (rate limit), 500 (server error), or just time out. Right now, one failed `streamText()` call crashes the entire agent.
 
 ### The Fix
 
 Wrap LLM calls with exponential backoff:
+
+Create a helper file:
+
+**Edit `src/agent/retry.ts`:**
 
 ```typescript
 async function withRetry<T>(
@@ -47,10 +51,12 @@ async function withRetry<T>(
 
 Apply it to every LLM call:
 
+**Edit `src/agent/run.ts`:**
+
 ```typescript
 const result = await withRetry(() =>
   streamText({
-    model: openai(MODEL_NAME),
+    model: provider.chat(MODEL_NAME),
     messages,
     tools,
   })
@@ -76,15 +82,20 @@ Every conversation starts from zero. The agent can't remember that you prefer Ty
 
 There are two types of memory:
 
-**Conversation memory** — Save and load conversation histories:
+**Conversation memory** — Save and load conversation histories.
+
+Create a memory helper:
+
+**Edit `src/agent/memory.ts`:**
 
 ```typescript
 import fs from "fs/promises";
 import path from "path";
+import type { ModelMessage } from "ai";
 
 const MEMORY_DIR = path.join(process.cwd(), ".agent", "conversations");
 
-async function saveConversation(
+export async function saveConversation(
   id: string,
   messages: ModelMessage[],
 ): Promise<void> {
@@ -95,39 +106,353 @@ async function saveConversation(
   );
 }
 
-async function loadConversation(id: string): Promise<ModelMessage[] | null> {
+export async function loadConversation(id: string): Promise<ModelMessage[] | null> {
   try {
     const data = await fs.readFile(path.join(MEMORY_DIR, `${id}.json`), "utf-8");
-    return JSON.parse(data);
+    return JSON.parse(data) as ModelMessage[];
   } catch {
     return null;
   }
 }
 ```
 
-**Semantic memory** — Long-term facts extracted from conversations:
+Then use it from the UI.
+
+**Edit `src/ui/App.tsx`:**
 
 ```typescript
-interface MemoryEntry {
+import React, { useState, useCallback, useEffect } from "react";
+import { loadConversation, saveConversation } from "../agent/memory.ts";
+```
+
+Inside `App`, load a default conversation once:
+
+```typescript
+useEffect(() => {
+  async function loadMemory() {
+    const savedHistory = await loadConversation("default");
+
+    if (savedHistory) {
+      setConversationHistory(savedHistory);
+    }
+  }
+
+  void loadMemory();
+}, []);
+```
+
+After `runAgent()` returns, save the updated history:
+
+```typescript
+setConversationHistory(newHistory);
+await saveConversation("default", newHistory);
+```
+
+Now the flow is:
+
+```txt
+npm run start
+  -> load .agent/conversations/default.json if it exists
+  -> continue the old conversation
+  -> after each turn, save the updated ModelMessage[] history
+```
+
+This `default` conversation is the simplest learning version: every app launch continues the same saved conversation. Production agents usually go one step further:
+
+```txt
+New session:
+  create .agent/conversations/<session-id>.json
+
+Resume session:
+  load .agent/conversations/<session-id>.json only when the user asks to resume
+
+Cross-session memory:
+  store durable preferences/facts separately in semantic memory
+```
+
+That keeps conversation history scoped to a session, while semantic memory carries durable context across sessions.
+
+### Manual Test
+
+Run the app:
+
+```bash
+npm run start
+```
+
+Say:
+
+```txt
+Remember that I prefer TypeScript examples.
+```
+
+Exit the app, then start it again:
+
+```bash
+npm run start
+```
+
+Ask:
+
+```txt
+What programming language do I prefer for examples?
+```
+
+The agent should be able to answer from the reloaded conversation history. You can also inspect the saved file directly:
+
+```bash
+cat .agent/conversations/default.json
+```
+
+To reset memory:
+
+```bash
+rm .agent/conversations/default.json
+```
+
+**Semantic memory** — Long-term facts extracted from conversations.
+
+This comes later. If you want a minimal version, keep it in the same memory file and store extracted facts in `.agent/memories.json`.
+
+**Edit `src/agent/memory.ts`:**
+
+```typescript
+import { generateObject } from "ai";
+import { createOpenAI } from "@ai-sdk/openai";
+import { z } from "zod";
+
+const memoryProvider = createOpenAI({
+  apiKey: process.env.LLM_API_KEY,
+  baseURL: process.env.LLM_BASE_URL,
+});
+
+const MEMORY_MODEL = process.env.LLM_MODEL ?? "qwen3.5-flash-2026-02-23";
+const MEMORY_EXTRACT_EVERY_N_TURNS = Number(
+  process.env.MEMORY_EXTRACT_EVERY_N_TURNS ?? 3,
+);
+
+let turnsSinceMemoryExtraction = 0;
+
+export interface MemoryEntry {
   content: string;
   category: "preference" | "fact" | "instruction";
   createdAt: string;
 }
 
-// After each conversation, ask the LLM to extract memorable facts
-const { object: memories } = await generateObject({
-  model: openai("gpt-5-mini"),
-  schema: z.object({
-    entries: z.array(z.object({
-      content: z.string(),
-      category: z.enum(["preference", "fact", "instruction"]),
-    })),
-  }),
-  prompt: `Extract any facts worth remembering from this conversation:\n${conversationText}`,
-});
+const SEMANTIC_MEMORY_FILE = path.join(process.cwd(), ".agent", "memories.json");
+
+export async function loadMemories(): Promise<MemoryEntry[]> {
+  try {
+    const data = await fs.readFile(SEMANTIC_MEMORY_FILE, "utf-8");
+    return JSON.parse(data) as MemoryEntry[];
+  } catch {
+    return [];
+  }
+}
+
+export async function saveMemories(memories: MemoryEntry[]): Promise<void> {
+  await fs.mkdir(path.dirname(SEMANTIC_MEMORY_FILE), { recursive: true });
+  await fs.writeFile(SEMANTIC_MEMORY_FILE, JSON.stringify(memories, null, 2));
+}
+
+function dedupeMemories(memories: MemoryEntry[]): MemoryEntry[] {
+  const seen = new Set<string>();
+  return memories.filter((memory) => {
+    const key = `${memory.category}:${memory.content.toLowerCase().trim()}`;
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
+}
+
+export async function extractMemories(
+  conversationText: string,
+): Promise<MemoryEntry[]> {
+  const { object } = await generateObject({
+    model: memoryProvider.chat(MEMORY_MODEL),
+    schema: z.object({
+      entries: z.array(
+        z.union([
+          z.string(),
+          z.object({
+            content: z.string(),
+            category: z.enum(["preference", "fact", "instruction"]),
+          }),
+        ]),
+      ),
+    }),
+    prompt: `Extract durable user memories from this conversation.
+Return JSON that matches the schema exactly.
+The top-level JSON object must use the key "entries" exactly.
+Each entry must be either a string or an object with content and category.
+Do not use "memories" or any other top-level key.
+
+Example JSON:
+{
+  "entries": [
+    { "content": "The user prefers TypeScript examples.", "category": "preference" }
+  ]
+}
+
+Conversation:
+${conversationText}`,
+  });
+
+  return object.entries.map((entry) => {
+    if (typeof entry === "string") {
+      return {
+        content: entry,
+        category: "fact" as const,
+        createdAt: new Date().toISOString(),
+      };
+    }
+
+    return {
+      ...entry,
+      createdAt: new Date().toISOString(),
+    };
+  });
+}
+
+export async function updateMemoriesIfNeeded(
+  conversationText: string,
+): Promise<void> {
+  turnsSinceMemoryExtraction++;
+
+  if (turnsSinceMemoryExtraction < MEMORY_EXTRACT_EVERY_N_TURNS) {
+    return;
+  }
+
+  turnsSinceMemoryExtraction = 0;
+
+  const existingMemories = await loadMemories();
+  const newMemories = await extractMemories(conversationText);
+  await saveMemories(dedupeMemories([...existingMemories, ...newMemories]));
+}
 ```
 
-Then inject relevant memories into the system prompt on future conversations.
+After a conversation finishes, call the throttled helper from the UI, right after saving conversation history.
+
+**Edit `src/ui/App.tsx`:**
+
+```typescript
+setConversationHistory(newHistory);
+await saveConversation("default", newHistory);
+
+const conversationText = newHistory
+  .map((message) =>
+    typeof message.content === "string"
+      ? `${message.role}: ${message.content}`
+      : "",
+  )
+  .join("\n");
+
+await updateMemoriesIfNeeded(conversationText);
+```
+
+This gives you a simple throttle. With the default value of `3`, the agent saves conversation history every turn, but only runs the extra memory-extraction LLM call every third turn. Set `MEMORY_EXTRACT_EVERY_N_TURNS=1` if you want to test extraction after every turn.
+
+Before a future model call, inject the saved memories into the system prompt. This belongs in the agent runner, because `run.ts` builds the messages that are sent to the LLM.
+
+**Edit `src/agent/run.ts`:**
+
+First import `loadMemories`:
+
+```typescript
+import { loadMemories } from "./memory.ts";
+```
+
+Then inside `runAgent`, immediately after this line:
+
+```typescript
+const modelLimits = getModelLimits(MODEL_NAME);
+```
+
+add:
+
+```typescript
+const memories = await loadMemories();
+const memoryText = memories.map((memory) => `- ${memory.content}`).join("\n");
+
+const systemPrompt = memoryText
+  ? `${SYSTEM_PROMPT}
+
+Known user memories:
+${memoryText}`
+  : SYSTEM_PROMPT;
+```
+
+Then replace the existing `SYSTEM_PROMPT` message content with `systemPrompt` in both places:
+
+```typescript
+const preCheckTokens = estimateMessagesTokens([
+  { role: "system", content: systemPrompt },
+  ...workingHistory,
+  { role: "user", content: userMessage },
+]);
+
+const messages: ModelMessage[] = [
+  { role: "system", content: systemPrompt },
+  ...workingHistory,
+  { role: "user", content: userMessage },
+];
+```
+
+### Minimal Test
+
+For testing, make semantic extraction run after every turn:
+
+```env
+MEMORY_EXTRACT_EVERY_N_TURNS=1
+```
+
+Start clean:
+
+```bash
+rm -f .agent/memories.json
+```
+
+Run the app:
+
+```bash
+npm run start
+```
+
+Say something explicit:
+
+```txt
+Remember that I prefer TypeScript examples over Python examples.
+```
+
+After the response finishes, exit the app and inspect the memory file:
+
+```bash
+cat .agent/memories.json
+```
+
+You should see a saved memory similar to:
+
+```json
+[
+  {
+    "content": "The user prefers TypeScript examples over Python examples.",
+    "category": "preference",
+    "createdAt": "..."
+  }
+]
+```
+
+Then start the app again and ask:
+
+```txt
+If you show a code example, which language should you choose?
+```
+
+Expected result: the agent should answer TypeScript, because `run.ts` loads `.agent/memories.json` and injects those memories into the system prompt.
+
+This is intentionally simple. Real semantic memory usually adds deduplication, user review, and relevance search before injecting memories into the prompt.
 
 ### Going Further
 
@@ -147,6 +472,10 @@ Then inject relevant memories into the system prompt on future conversations.
 ### The Fix
 
 **Level 1 — Command allowlists:**
+
+Add command validation next to the shell tool:
+
+**Edit `src/agent/tools/shell.ts`:**
 
 ```typescript
 const BLOCKED_PATTERNS = [
@@ -170,6 +499,10 @@ function isCommandSafe(command: string): { safe: boolean; reason?: string } {
 
 **Level 2 — Directory scoping:**
 
+Add path validation next to the file tools:
+
+**Edit `src/agent/tools/file.ts`:**
+
 ```typescript
 const ALLOWED_DIRS = [process.cwd()];
 
@@ -182,6 +515,10 @@ function isPathAllowed(filePath: string): boolean {
 **Level 3 — Container isolation:**
 
 Run tools inside a Docker container:
+
+This belongs with the shell execution code:
+
+**Edit `src/agent/tools/shell.ts`:**
 
 ```typescript
 import { execSync } from "child_process";
@@ -222,6 +559,10 @@ The LLM might follow these injected instructions.
 
 **Delimiter-based isolation:**
 
+Add this helper near the agent loop, before tool results are appended to messages:
+
+**Edit `src/agent/run.ts`:**
+
 ```typescript
 function wrapToolResult(toolName: string, result: string): string {
   // Use unique delimiters the LLM is trained to respect
@@ -230,6 +571,10 @@ function wrapToolResult(toolName: string, result: string): string {
 ```
 
 **System prompt hardening:**
+
+Put the hardened prompt where your system prompt is defined:
+
+**Edit `src/agent/prompt.ts`:**
 
 ```typescript
 export const SYSTEM_PROMPT = `You are a helpful AI assistant.
@@ -244,6 +589,10 @@ IMPORTANT SAFETY RULES:
 ```
 
 **Output validation:**
+
+Validate tool calls inside the agent loop before executing them:
+
+**Edit `src/agent/run.ts`:**
 
 ```typescript
 // After the LLM generates tool calls, check if they make sense
@@ -284,6 +633,10 @@ function validateToolCall(
 An agent in a loop can burn through API credits fast. A runaway loop (tool fails → agent retries → fails again → retries) could cost hundreds of dollars before anyone notices.
 
 ### The Fix
+
+Create a usage tracker:
+
+**Edit `src/agent/usage.ts`:**
 
 ```typescript
 interface UsageLimits {
@@ -340,6 +693,8 @@ class UsageTracker {
 
 Integrate into the agent loop:
 
+**Edit `src/agent/run.ts`:**
+
 ```typescript
 const tracker = new UsageTracker(DEFAULT_LIMITS);
 
@@ -372,6 +727,10 @@ while (true) {
 
 ### The Fix
 
+Create a truncation helper:
+
+**Edit `src/agent/toolResults.ts`:**
+
 ```typescript
 const MAX_TOOL_RESULT_LENGTH = 50_000; // ~13k tokens
 
@@ -391,12 +750,16 @@ function truncateResult(result: string, maxLength: number = MAX_TOOL_RESULT_LENG
 
 Apply to every tool result before adding to messages:
 
+**Edit `src/agent/run.ts`:**
+
 ```typescript
 const rawResult = await executeTool(tc.toolName, tc.args);
 const result = truncateResult(rawResult);
 ```
 
 For file tools specifically, add pagination:
+
+**Edit `src/agent/tools/file.ts`:**
 
 ```typescript
 export const readFile = tool({
@@ -430,6 +793,10 @@ export const readFile = tool({
 When the LLM requests multiple tool calls in one turn (e.g., read three files), we execute them sequentially. This is unnecessarily slow — file reads are independent.
 
 ### The Fix
+
+Change the tool execution section of the agent loop:
+
+**Edit `src/agent/run.ts`:**
 
 ```typescript
 // Before (sequential)
@@ -487,6 +854,10 @@ The user asks the agent to do something, then realizes it's wrong. There's no wa
 
 Use an `AbortController`:
 
+Add `signal` support to the agent runner:
+
+**Edit `src/agent/run.ts`:**
+
 ```typescript
 export async function runAgent(
   userMessage: string,
@@ -504,7 +875,7 @@ export async function runAgent(
     }
 
     const result = streamText({
-      model: openai(MODEL_NAME),
+      model: provider.chat(MODEL_NAME),
       messages,
       tools,
       abortSignal: signal, // Pass to AI SDK
@@ -516,6 +887,10 @@ export async function runAgent(
 ```
 
 In the UI, wire Ctrl+C to the abort controller:
+
+Add cancellation state and input handling to the Ink app:
+
+**Edit `src/ui/App.tsx`:**
 
 ```typescript
 const [abortController, setAbortController] = useState<AbortController | null>(null);
@@ -543,6 +918,10 @@ await runAgent(userInput, history, callbacks, controller.signal);
 When something goes wrong in production, `console.log` isn't enough. You need to know which conversation, which tool call, what inputs, what the LLM decided, and why.
 
 ### The Fix
+
+Create a logger helper:
+
+**Edit `src/agent/logger.ts`:**
 
 ```typescript
 interface LogEntry {
@@ -609,6 +988,10 @@ Our agent is reactive — it decides one step at a time. Ask it to "refactor the
 
 Add a planning step before execution:
 
+Put the planning prompt near your main system prompt:
+
+**Edit `src/agent/prompt.ts`:**
+
 ```typescript
 const PLANNING_PROMPT = `Before taking any action, create a plan.
 
@@ -631,10 +1014,14 @@ function buildSystemPrompt(taskComplexity: "simple" | "complex"): string {
 
 A more sophisticated approach uses a dedicated planning call:
 
+Create a planner helper:
+
+**Edit `src/agent/planner.ts`:**
+
 ```typescript
 async function planTask(task: string, availableTools: string[]): Promise<string> {
   const { text: plan } = await generateText({
-    model: openai("gpt-5-mini"),
+    model: provider.chat(process.env.LLM_MODEL ?? "qwen3.5-flash-2026-02-23"),
     messages: [
       {
         role: "system",
@@ -648,8 +1035,13 @@ async function planTask(task: string, availableTools: string[]): Promise<string>
   });
   return plan;
 }
+```
 
-// In the agent loop, plan first, then execute
+Then call the planner from the agent loop:
+
+**Edit `src/agent/run.ts`:**
+
+```typescript
 const plan = await planTask(userMessage, Object.keys(tools));
 callbacks.onToken(`Plan:\n${plan}\n\nExecuting...\n`);
 
@@ -670,6 +1062,10 @@ One agent with one system prompt tries to be good at everything. In practice, di
 
 Create specialized agents and a router:
 
+Create a routing module:
+
+**Edit `src/agent/router.ts`:**
+
 ```typescript
 interface AgentConfig {
   name: string;
@@ -683,25 +1079,25 @@ const AGENTS: Record<string, AgentConfig> = {
     name: "Code Agent",
     systemPrompt: "You are an expert programmer...",
     tools: { readFile, writeFile, listFiles, executeCode },
-    model: "gpt-5-mini",
+    model: "qwen3.5-flash-2026-02-23",
   },
   researcher: {
     name: "Research Agent",
     systemPrompt: "You are a research assistant...",
     tools: { webSearch, readFile },
-    model: "gpt-5-mini",
+    model: "qwen3.5-flash-2026-02-23",
   },
   sysadmin: {
     name: "System Agent",
     systemPrompt: "You are a system administrator...",
     tools: { runCommand, readFile, listFiles },
-    model: "gpt-5-mini",
+    model: "qwen3.5-flash-2026-02-23",
   },
 };
 
 async function routeToAgent(userMessage: string): Promise<string> {
   const { object } = await generateObject({
-    model: openai("gpt-5-mini"),
+    model: provider.chat(process.env.LLM_MODEL ?? "qwen3.5-flash-2026-02-23"),
     schema: z.object({
       agent: z.enum(["coder", "researcher", "sysadmin"]),
       reason: z.string(),
@@ -730,6 +1126,10 @@ Our evals use mocked tools. That's good for testing LLM behavior, but it doesn't
 ### The Fix
 
 Add integration tests alongside mock-based evals:
+
+Create an integration test file:
+
+**Edit `tests/file-tools.test.ts`:**
 
 ```typescript
 import { describe, it, expect, afterEach } from "vitest";

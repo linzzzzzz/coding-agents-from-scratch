@@ -169,14 +169,27 @@ The registry is a plain object mapping tool names to tool definitions. The AI SD
 
 Let's test this with a simple script. Update `src/index.ts`:
 
+> Prefer the original OpenAI-only setup? It is preserved in [`02-tool-calling.original-openai.md`](./02-tool-calling.original-openai.md).
+
 ```typescript
 import { generateText } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { tools } from "./agent/tools/index.ts";
 import { SYSTEM_PROMPT } from "./agent/system/prompt.ts";
 
+const apiKey = process.env.LLM_API_KEY;
+
+if (!apiKey) {
+  throw new Error("Missing LLM_API_KEY in .env");
+}
+
+const provider = createOpenAI({
+  apiKey,
+  baseURL: process.env.LLM_BASE_URL,
+});
+
 const result = await generateText({
-  model: openai("gpt-5-mini"),
+  model: provider.chat(process.env.LLM_MODEL ?? "qwen3.5-flash-2026-02-23"),
   messages: [
     { role: "system", content: SYSTEM_PROMPT },
     { role: "user", content: "What files are in the current directory?" },
@@ -242,7 +255,7 @@ export async function executeTool(
 
   const execute = tool.execute;
   if (!execute) {
-    // Provider tools (like webSearch) are executed by OpenAI, not us
+    // Provider tools (like webSearch) are executed by the model provider, not us
     return `Provider tool ${name} - executed by model provider`;
   }
 
