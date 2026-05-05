@@ -399,11 +399,13 @@ After testing, restore the normal limits.
 
 ### The Problem
 
-The user asks the agent to do something, then realizes it's wrong. There's no way to stop it mid-execution. The agent loop runs until the LLM finishes or a tool call gets rejected.
+The user asks the agent to do something, then realizes it's wrong.
+
+Ctrl+C can kill the whole Node process, but production agents need a gentler option: cancel the current model/tool run, clean up UI state, and return control to the prompt without corrupting the session.
 
 ### The Fix
 
-Use an `AbortController`:
+Use an `AbortController`. The controller lives in the UI, and its `signal` is passed into the agent runner.
 
 Add `signal` support to the agent runner:
 
@@ -437,28 +439,140 @@ export async function runAgent(
 }
 ```
 
-In the UI, wire Ctrl+C to the abort controller:
+In the UI, wire Ctrl+C to the abort controller.
 
-Add cancellation state and input handling to the Ink app:
+First, disable Ink's default Ctrl+C exit behavior in the entry files. Otherwise Ink exits the app before your `useInput` handler gets a chance to cancel the active run.
+
+**Edit `src/index.ts`:**
+
+```typescript
+render(React.createElement(App), {
+  exitOnCtrlC: false,
+});
+```
+
+**Edit `src/cli.ts`:**
+
+```typescript
+render(React.createElement(App), {
+  exitOnCtrlC: false,
+});
+```
+
+Then import `useInput` if `App.tsx` does not already import it:
+
+```typescript
+import { Box, Text, useApp, useInput } from "ink";
+```
+
+Then add cancellation state near the other `useState` calls inside `App`:
 
 **Edit `src/ui/App.tsx`:**
 
 ```typescript
 const [abortController, setAbortController] = useState<AbortController | null>(null);
+```
 
+Add the Ctrl+C handler inside the `App` component, after the state declarations and before `handleSubmit`:
+
+```typescript
 useInput((input, key) => {
-  if (key.ctrl && input === "c" && abortController) {
-    abortController.abort();
-    setAbortController(null);
-    setIsLoading(false);
+  if (key.ctrl && input === "c") {
+    if (abortController) {
+      abortController.abort();
+    } else {
+      exit();
+    }
   }
 });
+```
 
-// When starting a request:
+Finally, create the controller inside `handleSubmit`, immediately before the `runAgent(...)` call. Do not put this at the top level of the component:
+
+```typescript
 const controller = new AbortController();
 setAbortController(controller);
-await runAgent(userInput, history, callbacks, controller.signal);
+
+try {
+  const newHistory = await runAgent(
+    userInput,
+    conversationHistory,
+    {
+      onToken: (token) => {
+        setStreamingText((prev) => prev + token);
+      },
+      onToolCallStart: (name, args) => {
+        // existing callback body
+      },
+      onToolCallEnd: (name, result) => {
+        // existing callback body
+      },
+      onComplete: (response) => {
+        // existing callback body
+      },
+      onToolApproval: (name, args) => {
+        // existing callback body
+      },
+      onTokenUsage: (usage) => {
+        setTokenUsage(usage);
+      },
+    },
+    controller.signal,
+  );
+
+  setConversationHistory(newHistory);
+} finally {
+  setAbortController(null);
+  setIsLoading(false);
+}
 ```
+
+The placement matters:
+
+- `exitOnCtrlC: false` belongs in the Ink `render(...)` options so the app, not Ink, decides what Ctrl+C means.
+- `useState` belongs at the top of `App`, next to the other state.
+- `useInput` belongs inside `App`, but outside `handleSubmit`.
+- `new AbortController()` belongs inside `handleSubmit`, right before the current `runAgent(...)` call.
+- `controller.signal` is passed as the fourth argument to `runAgent`.
+- The Ctrl+C handler only calls `abort()`. It does not clear loading state directly.
+- `finally` clears the controller and loading state after `runAgent` actually unwinds.
+
+### Minimal Test
+
+Run the app:
+
+```bash
+npm run start
+```
+
+Submit a prompt that takes a moment:
+
+```txt
+help me draft something 50 words
+```
+
+While the UI shows `Thinking...`, press Ctrl+C.
+
+Expected behavior:
+
+- The app does not immediately exit.
+- The current run is cancelled.
+- The input prompt becomes usable again.
+- Pressing Ctrl+C again while idle exits the app.
+
+### Going Further
+
+This is basic cancellation. It gives the UI a way to ask the active model request to stop, but it does not make every part of the agent fully cancellation-safe.
+
+The remaining hardening is inside `runAgent` and tools:
+
+- Check `signal.aborted` inside the streaming loop, not only at the top of the outer agent loop.
+- Treat abort errors from `result.fullStream` as cancellation, not normal failures.
+- Avoid waiting on `result.finishReason`, `result.usage`, or `result.response` after cancellation.
+- Resolve pending tool approvals when cancellation happens.
+- Pass cancellation into long-running tools, especially shell commands and code execution.
+
+Those are production hardening steps. The minimal version above is enough to distinguish "cancel this run" from "exit the whole app," which is the first behavior users expect.
 
 ---
 
@@ -470,37 +584,56 @@ When something goes wrong in production, `console.log` isn't enough. You need to
 
 ### The Fix
 
-Create a logger helper:
+Create a small JSONL logger, then wire it into `runAgent`.
+
+JSONL means "one JSON object per line." It is easy to append, stream, grep, and import into other tools later.
 
 **Edit `src/agent/logger.ts`:**
 
 ```typescript
+import { appendFileSync, mkdirSync } from "node:fs";
+
+type LogEvent =
+  | "agent_run_started"
+  | "agent_run_completed"
+  | "llm_call_started"
+  | "llm_call_completed"
+  | "tool_call"
+  | "tool_result"
+  | "approval"
+  | "error";
+
 interface LogEntry {
   timestamp: string;
   conversationId: string;
-  event: "llm_call" | "tool_call" | "tool_result" | "error" | "approval";
+  runId: string;
+  event: LogEvent;
   data: Record<string, unknown>;
 }
 
-class AgentLogger {
+export class AgentLogger {
   private entries: LogEntry[] = [];
+  private logPath = ".agent/logs/agent.jsonl";
 
-  constructor(private conversationId: string) {}
+  constructor(
+    private conversationId: string,
+    private runId: string,
+  ) {
+    mkdirSync(".agent/logs", { recursive: true });
+  }
 
-  log(event: LogEntry["event"], data: Record<string, unknown>): void {
+  log(event: LogEvent, data: Record<string, unknown> = {}): void {
     const entry: LogEntry = {
       timestamp: new Date().toISOString(),
       conversationId: this.conversationId,
+      runId: this.runId,
       event,
       data,
     };
+
     this.entries.push(entry);
 
-    // Write to file for persistence
-    fs.appendFileSync(
-      ".agent/logs/agent.jsonl",
-      JSON.stringify(entry) + "\n",
-    );
+    appendFileSync(this.logPath, JSON.stringify(entry) + "\n");
   }
 
   logToolCall(name: string, args: unknown): void {
@@ -525,6 +658,173 @@ class AgentLogger {
 }
 ```
 
-Use JSONL (one JSON object per line) so logs can be streamed, grepped, and processed with standard tools.
+This logger is intentionally boring. It writes local JSONL, creates the directory if needed, and includes both a `conversationId` and a per-turn `runId`.
+
+### Wire It Into `runAgent`
+
+**Edit `src/agent/run.ts`:**
+
+Add the imports:
+
+```typescript
+import { randomUUID } from "node:crypto";
+import { AgentLogger } from "./logger.ts";
+```
+
+Create a logger near the top of `runAgent`:
+
+```typescript
+export async function runAgent(
+  userMessage: string,
+  conversationHistory: ModelMessage[],
+  callbacks: AgentCallbacks,
+  usageTracker: UsageTracker,
+  signal?: AbortSignal,
+): Promise<ModelMessage[]> {
+  const logger = new AgentLogger("default", randomUUID());
+
+  logger.log("agent_run_started", {
+    model: MODEL_NAME,
+    historyLength: conversationHistory.length,
+    userMessageLength: userMessage.length,
+  });
+
+  try {
+    // existing runAgent logic goes here
+  } catch (error) {
+    logger.logError(error as Error, "runAgent");
+    throw error;
+  }
+}
+```
+
+In the real file, do not delete the existing `runAgent` body. Add the `logger`, log `agent_run_started`, and wrap the existing body in the `try` block so failures are logged before they are re-thrown to the UI.
+
+For now, `"default"` matches the saved conversation id used by the app. Later, if you support multiple conversations, pass the real conversation id into `runAgent` instead.
+
+### Log The Model Call
+
+Before `streamText`, log that the model request is starting:
+
+```typescript
+logger.log("llm_call_started", {
+  model: MODEL_NAME,
+  messageCount: messages.length,
+});
+
+const result = await withRetry(async () =>
+  streamText({
+    model: provider.chat(MODEL_NAME),
+    messages,
+    tools,
+    allowSystemInMessages: true,
+    experimental_telemetry: {
+      isEnabled: true,
+      tracer: getTracer(),
+    },
+    abortSignal: signal,
+  }),
+);
+```
+
+After usage is available, log the result:
+
+```typescript
+const usage = await result.usage;
+usageTracker.addTokens(usage.inputTokens ?? 0, false);
+usageTracker.addTokens(usage.outputTokens ?? 0, true);
+
+logger.log("llm_call_completed", {
+  finishReason,
+  inputTokens: usage.inputTokens ?? 0,
+  outputTokens: usage.outputTokens ?? 0,
+  toolCallCount: toolCalls.length,
+});
+```
+
+### Log Tool Calls And Approvals
+
+When the stream reports a tool call, log it at the same place you notify the UI:
+
+```typescript
+if (chunk.type === "tool-call") {
+  const input = "input" in chunk ? chunk.input : {};
+  toolCalls.push({
+    toolCallId: chunk.toolCallId,
+    toolName: chunk.toolName,
+    args: input as Record<string, unknown>,
+  });
+
+  logger.logToolCall(chunk.toolName, input);
+  callbacks.onToolCallStart(chunk.toolName, input);
+}
+```
+
+When asking for human approval, log whether the tool was approved:
+
+```typescript
+const approved = await callbacks.onToolApproval(tc.toolName, tc.args);
+
+logger.log("approval", {
+  toolName: tc.toolName,
+  approved,
+});
+
+if (!approved) {
+  rejected = true;
+  break;
+}
+```
+
+Around `executeTool`, measure how long the tool took:
+
+```typescript
+const toolStart = Date.now();
+const toolResult = await executeTool(tc.toolName, tc.args);
+const durationMs = Date.now() - toolStart;
+
+logger.logToolResult(tc.toolName, toolResult, durationMs);
+callbacks.onToolCallEnd(tc.toolName, toolResult);
+```
+
+At the end of the run, log completion:
+
+```typescript
+callbacks.onComplete(fullResponse);
+
+logger.log("agent_run_completed", {
+  responseLength: fullResponse.length,
+  messageCount: messages.length,
+});
+
+return messages;
+```
+
+### Minimal Test
+
+Run the app:
+
+```bash
+npm run start
+```
+
+Ask for something that uses either the model or a tool. Then inspect the log:
+
+```bash
+tail -n 20 .agent/logs/agent.jsonl
+```
+
+You should see events like:
+
+```json
+{"timestamp":"...","conversationId":"default","runId":"...","event":"agent_run_started","data":{"model":"...","historyLength":0,"userMessageLength":24}}
+{"timestamp":"...","conversationId":"default","runId":"...","event":"llm_call_started","data":{"model":"...","messageCount":2}}
+{"timestamp":"...","conversationId":"default","runId":"...","event":"llm_call_completed","data":{"finishReason":"stop","inputTokens":123,"outputTokens":45,"toolCallCount":0}}
+{"timestamp":"...","conversationId":"default","runId":"...","event":"agent_run_completed","data":{"responseLength":280,"messageCount":3}}
+```
+
+### Privacy Note
+
+This version logs metadata, lengths, tool names, and tool arguments. In a real product, be careful with raw tool arguments because they may contain file paths, secrets, or user content. A stronger production logger would redact sensitive fields before writing them.
 
 ---
