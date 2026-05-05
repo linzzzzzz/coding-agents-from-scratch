@@ -12,14 +12,17 @@ Production agents need tool output limits, safe parallelism, and real integratio
 
 ### The Fix
 
-Create a truncation helper:
+Create an agent-level helper for formatting tool output before it goes back into the model:
 
 **Edit `src/agent/toolResults.ts`:**
 
 ```typescript
-const MAX_TOOL_RESULT_LENGTH = 50_000; // ~13k tokens
+export const MAX_TOOL_RESULT_LENGTH = 50_000; // ~13k tokens
 
-function truncateResult(result: string, maxLength: number = MAX_TOOL_RESULT_LENGTH): string {
+export function truncateResult(
+  result: string,
+  maxLength: number = MAX_TOOL_RESULT_LENGTH,
+): string {
   if (result.length <= maxLength) return result;
 
   const half = Math.floor(maxLength / 2);
@@ -33,14 +36,22 @@ function truncateResult(result: string, maxLength: number = MAX_TOOL_RESULT_LENG
 }
 ```
 
+This file lives next to `run.ts` because it is not a tool implementation. It is agent-loop infrastructure for controlling what tool results are allowed back into the conversation.
+
 Apply to every tool result before adding to messages:
 
 **Edit `src/agent/run.ts`:**
 
 ```typescript
-const rawResult = await executeTool(tc.toolName, tc.args);
-const result = truncateResult(rawResult);
+import { truncateResult } from "./toolResults.ts";
+
+// ...
+
+const rawToolResult = await executeTool(tc.toolName, tc.args);
+const toolResult = truncateResult(rawToolResult);
 ```
+
+Use `toolResult` for `callbacks.onToolCallEnd(...)`, conversation history, and anything sent back to the model. Keep `rawToolResult` only if you need full local logs or debugging output.
 
 For file tools specifically, add pagination:
 
@@ -54,20 +65,62 @@ export const readFile = tool({
     offset: z.number().optional().describe("Line number to start from"),
     limit: z.number().optional().describe("Max lines to read").default(200),
   }),
-  execute: async ({ path: filePath, offset = 0, limit = 200 }) => {
+  execute: async ({
+    path: filePath,
+    offset = 0,
+    limit = 200,
+  }: {
+    path: string;
+    offset?: number;
+    limit?: number;
+  }) => {
     const content = await fs.readFile(filePath, "utf-8");
     const lines = content.split("\n");
     const slice = lines.slice(offset, offset + limit);
     const totalLines = lines.length;
 
     let result = slice.join("\n");
-    if (totalLines > limit) {
+    if (offset + slice.length < totalLines) {
       result += `\n\n[Showing lines ${offset + 1}-${offset + slice.length} of ${totalLines}. Use offset to read more.]`;
     }
     return result;
   },
 });
 ```
+
+### Minimal Test
+
+Create a large mock Markdown file to check file-tool pagination:
+
+```bash
+node -e 'let s="# Large Test\n\n"; for (let i=1;i<=250;i++) s += `## Section ${i}\n${"x".repeat(400)}\n\n`; require("fs").writeFileSync("large-test.md", s)'
+```
+
+Call the `readFile` tool directly:
+
+```bash
+node --import tsx/esm -e 'const { executeTool } = await import("./src/agent/executeTool.ts"); const result = await executeTool("readFile", { path: "large-test.md", limit: 200 }); console.log(result.split("\n").slice(-2).join("\n"));'
+```
+
+You should see a pagination footer:
+
+```txt
+[Showing lines 1-200 of 753. Use offset to read more.]
+```
+
+Check the next page:
+
+```bash
+node --import tsx/esm -e 'const { executeTool } = await import("./src/agent/executeTool.ts"); const result = await executeTool("readFile", { path: "large-test.md", offset: 200, limit: 200 }); console.log(result.split("\n").slice(-2).join("\n"));'
+```
+
+Expected footer:
+
+```txt
+[Showing lines 201-400 of 753. Use offset to read more.]
+```
+
+This confirms the file tool is slicing results with `limit` and `offset`. To test `truncateResult` specifically, use a tool result that is still larger than `MAX_TOOL_RESULT_LENGTH` after pagination, or temporarily lower `MAX_TOOL_RESULT_LENGTH`.
 
 ---
 
@@ -80,53 +133,192 @@ When the LLM requests multiple tool calls in one turn (e.g., read three files), 
 
 ### The Fix
 
-Change the tool execution section of the agent loop:
+Use one shared helper for executing a tool call, then add a small scheduler around it.
+
+For background on why this shape mirrors larger coding agents, see [Production Tool Orchestration Reference](./10d-production-tool-orchestration-reference.md).
 
 **Edit `src/agent/run.ts`:**
 
 ```typescript
-// Before (sequential)
-for (const tc of toolCalls) {
-  const result = await executeTool(tc.toolName, tc.args);
-  // ...
+const CONCURRENCY_SAFE_TOOLS = new Set(["readFile", "listFiles", "webSearch"]);
+
+function isConcurrencySafe(tc: ToolCallInfo): boolean {
+  return CONCURRENCY_SAFE_TOOLS.has(tc.toolName);
 }
 
-// After (parallel where safe)
-const SAFE_TO_PARALLELIZE = new Set(["readFile", "listFiles", "webSearch"]);
+type ToolBatch = {
+  isConcurrencySafe: boolean;
+  toolCalls: ToolCallInfo[];
+};
 
-const canParallelize = toolCalls.every((tc) =>
-  SAFE_TO_PARALLELIZE.has(tc.toolName)
-);
+function partitionToolCalls(toolCalls: ToolCallInfo[]): ToolBatch[] {
+  const batches: ToolBatch[] = [];
 
-if (canParallelize) {
-  const results = await Promise.all(
-    toolCalls.map(async (tc) => ({
-      tc,
-      result: await executeTool(tc.toolName, tc.args),
-    }))
-  );
-
-  for (const { tc, result } of results) {
-    callbacks.onToolCallEnd(tc.toolName, result);
-    messages.push({
-      role: "tool",
-      content: [{
-        type: "tool-result",
-        toolCallId: tc.toolCallId,
-        toolName: tc.toolName,
-        output: { type: "text", value: result },
-      }],
-    });
-  }
-} else {
-  // Fall back to sequential for write/delete/shell
   for (const tc of toolCalls) {
-    // ... existing sequential logic with approval
+    const safe = isConcurrencySafe(tc);
+    const last = batches[batches.length - 1];
+
+    if (safe && last?.isConcurrencySafe) {
+      last.toolCalls.push(tc);
+    } else {
+      batches.push({ isConcurrencySafe: safe, toolCalls: [tc] });
+    }
   }
+
+  return batches;
 }
 ```
 
-Read-only tools can always run in parallel. Write tools must stay sequential because order matters — and they need individual approval.
+Then extract the shared execution work into one helper inside `runAgent`, near the tool loop:
+
+If your logger does not have this event yet, add `"tool_execution_started"` to the `LogEvent` union and add this method to `src/agent/logger.ts`:
+
+```typescript
+logToolExecutionStarted(name: string, args: unknown): void {
+  this.log("tool_execution_started", { toolName: name, args });
+}
+```
+
+```typescript
+async function executeApprovedToolCall(
+  tc: ToolCallInfo,
+): Promise<ModelMessage> {
+  usageTracker.addToolCall();
+  const toolLimitCheck = usageTracker.check();
+
+  if (!toolLimitCheck.ok) {
+    throw new Error(toolLimitCheck.reason);
+  }
+
+  const toolStart = Date.now();
+  logger.logToolExecutionStarted(tc.toolName, tc.args);
+  const rawToolResult = await executeTool(tc.toolName, tc.args);
+  const toolResult = truncateResult(rawToolResult);
+  const durationMs = Date.now() - toolStart;
+
+  logger.logToolResult(tc.toolName, toolResult, durationMs);
+  previousToolResults.push(toolResult);
+  callbacks.onToolCallEnd(tc.toolName, toolResult);
+
+  const wrappedToolResult = wrapToolResult(tc.toolName, toolResult);
+
+  return {
+    role: "tool",
+    content: [
+      {
+        type: "tool-result",
+        toolCallId: tc.toolCallId,
+        toolName: tc.toolName,
+        output: { type: "text", value: wrappedToolResult },
+      },
+    ],
+  };
+}
+```
+
+Now replace the old sequential `for (const tc of toolCalls)` block with batched execution:
+
+```typescript
+let rejected = false;
+
+for (const batch of partitionToolCalls(toolCalls)) {
+  const approvedToolCalls: ToolCallInfo[] = [];
+
+  // Keep validation and approval sequential so the user sees one clear decision
+  // at a time, even when execution can run in parallel later.
+  for (const tc of batch.toolCalls) {
+    const validation = validateToolCall(
+      tc.toolName,
+      tc.args,
+      previousToolResults,
+    );
+
+    if (!validation.valid) {
+      const stopMessage = `\n[Tool blocked: ${validation.reason}]`;
+      callbacks.onToken(stopMessage);
+      fullResponse += stopMessage;
+      rejected = true;
+      break;
+    }
+
+    const approved = await callbacks.onToolApproval(tc.toolName, tc.args);
+    logger.log("approval", { toolName: tc.toolName, approved });
+
+    if (!approved) {
+      rejected = true;
+      break;
+    }
+
+    approvedToolCalls.push(tc);
+  }
+
+  if (rejected) break;
+
+  try {
+    if (batch.isConcurrencySafe) {
+      const toolMessages = await Promise.all(
+        approvedToolCalls.map(executeApprovedToolCall),
+      );
+      messages.push(...toolMessages);
+      reportTokenUsage();
+    } else {
+      for (const tc of approvedToolCalls) {
+        const toolMessage = await executeApprovedToolCall(tc);
+        messages.push(toolMessage);
+        reportTokenUsage();
+      }
+    }
+  } catch (error) {
+    const err = error as Error;
+    const stopMessage = `\n[Agent stopped: ${err.message}]`;
+    callbacks.onToken(stopMessage);
+    fullResponse += stopMessage;
+    rejected = true;
+    break;
+  }
+}
+
+if (rejected) {
+  break;
+}
+```
+
+This gives you the production shape used by larger coding agents:
+
+- consecutive read-only tools can run together
+- write/delete/shell tools run alone and in order
+- every path still uses the same truncation, logging, wrapping, usage tracking, and history updates
+- permission prompts stay sequential, so the UI does not need to handle multiple approval dialogs at once
+
+If you later auto-approve read-only tools, you can skip `onToolApproval` for `batch.isConcurrencySafe`, but keep the shared execution helper.
+
+### Minimal Test
+
+Create two small files:
+
+```bash
+printf "A\n%.0s" {1..500} > parallel-a.md
+printf "B\n%.0s" {1..500} > parallel-b.md
+```
+
+Start the app and ask:
+
+```txt
+Read parallel-a.md and parallel-b.md in one turn.
+```
+
+Approve both `readFile` calls if prompted. Then check `.agent/logs/agent.jsonl`.
+
+For a parallel-safe batch, you should see both tool executions start before either one finishes:
+
+```txt
+tool_execution_started readFile parallel-a.md
+tool_execution_started readFile parallel-b.md
+tool_result readFile parallel-a.md
+tool_result readFile parallel-b.md
+```
+
+That ordering is the useful signal. It means the runtime started the safe reads together instead of waiting for the first result before starting the second.
 
 ---
 
