@@ -82,6 +82,10 @@ const provider = createOpenAI({
 
 const MODEL_NAME = process.env.LLM_MODEL ?? "qwen3.5-flash-2026-02-23";
 
+function withoutSystemMessages(messages: ModelMessage[]): ModelMessage[] {
+  return messages.filter((message) => message.role !== "system");
+}
+
 export async function runAgent(
   userMessage: string,
   conversationHistory: ModelMessage[],
@@ -89,7 +93,7 @@ export async function runAgent(
 ): Promise<ModelMessage[]> {
   const messages: ModelMessage[] = [
     { role: "system", content: SYSTEM_PROMPT },
-    ...conversationHistory,
+    ...withoutSystemMessages(conversationHistory),
     { role: "user", content: userMessage },
   ];
 
@@ -162,7 +166,7 @@ export async function runAgent(
 
   callbacks.onComplete(fullResponse);
 
-  return messages;
+  return withoutSystemMessages(messages);
 }
 ```
 
@@ -190,12 +194,19 @@ It returns the updated message history, which the caller stores for the next tur
 ```typescript
 const messages: ModelMessage[] = [
   { role: "system", content: SYSTEM_PROMPT },
-  ...conversationHistory,
+  ...withoutSystemMessages(conversationHistory),
   { role: "user", content: userMessage },
 ];
 ```
 
-We build the full message array: system prompt, then conversation history, then the new user message. This array grows as tools are called — tool results get appended.
+We build the full message array: a fresh system prompt, then reusable
+conversation history, then the new user message. `withoutSystemMessages()` keeps
+old system prompts out of history because each run should get exactly one fresh
+system prompt.
+
+This array grows as tools are called — tool results get appended. At the end of
+the run, we return `withoutSystemMessages(messages)` so the next turn receives
+only reusable user, assistant, and tool messages.
 
 ### The Loop
 

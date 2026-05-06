@@ -197,13 +197,19 @@ Then accept the tracker in the agent loop:
 ```typescript
 import type { UsageTracker } from "./usage.ts";
 
+function withoutSystemMessages(messages: ModelMessage[]): ModelMessage[] {
+  return messages.filter((message) => message.role !== "system");
+}
+
 export async function runAgent(
   userMessage: string,
   conversationHistory: ModelMessage[],
   callbacks: AgentCallbacks,
   usageTracker: UsageTracker,
 ): Promise<ModelMessage[]> {
-  let workingHistory = filterCompatibleMessages(conversationHistory);
+  let workingHistory = withoutSystemMessages(
+    filterCompatibleMessages(conversationHistory),
+  );
   usageTracker.startTurn();
 
   const initialLimitCheck = usageTracker.check();
@@ -211,11 +217,11 @@ export async function runAgent(
     const stopMessage = `\n[Agent stopped: ${initialLimitCheck.reason}]`;
     callbacks.onToken(stopMessage);
     callbacks.onComplete(stopMessage);
-    return [
+    return withoutSystemMessages([
       ...workingHistory,
       { role: "user", content: userMessage },
       { role: "assistant", content: stopMessage.trim() },
-    ];
+    ]);
   }
 
   // Now it is safe to do LLM-backed compaction if needed.
@@ -599,6 +605,7 @@ type LogEvent =
   | "llm_call_started"
   | "llm_call_completed"
   | "tool_call"
+  | "tool_execution_started"
   | "tool_result"
   | "approval"
   | "error";
@@ -638,6 +645,10 @@ export class AgentLogger {
 
   logToolCall(name: string, args: unknown): void {
     this.log("tool_call", { toolName: name, args });
+  }
+
+  logToolExecutionStarted(name: string, args: unknown): void {
+    this.log("tool_execution_started", { toolName: name, args });
   }
 
   logToolResult(name: string, result: string, durationMs: number): void {
@@ -797,7 +808,7 @@ logger.log("agent_run_completed", {
   messageCount: messages.length,
 });
 
-return messages;
+return withoutSystemMessages(messages);
 ```
 
 ### Minimal Test

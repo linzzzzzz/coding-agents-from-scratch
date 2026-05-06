@@ -165,8 +165,8 @@ export const filterCompatibleMessages = (
   messages: ModelMessage[],
 ): ModelMessage[] => {
   return messages.filter((msg) => {
-    // Keep user and system messages
-    if (msg.role === "user" || msg.role === "system") {
+    // Keep user messages. Add system prompts fresh for each run.
+    if (msg.role === "user") {
       return true;
     }
 
@@ -200,7 +200,7 @@ export const filterCompatibleMessages = (
 };
 ```
 
-This filter removes empty assistant messages (which provider tools sometimes generate) while keeping everything else intact. We'll use this in the agent loop before passing conversation history to the LLM.
+This filter removes empty assistant messages (which provider tools sometimes generate) while keeping the durable conversation history intact. System prompts are added fresh for each run, so they should not come from saved history.
 
 ## Token Estimation
 
@@ -511,6 +511,10 @@ import {
 } from "./context/index.ts";
 import { filterCompatibleMessages } from "./system/filterMessages.ts";
 
+function withoutSystemMessages(messages: ModelMessage[]): ModelMessage[] {
+  return messages.filter((message) => message.role !== "system");
+}
+
 export async function runAgent(
   userMessage: string,
   conversationHistory: ModelMessage[],
@@ -519,7 +523,9 @@ export async function runAgent(
   const modelLimits = getModelLimits(MODEL_NAME);
 
   // Filter and check if we need to compact
-  let workingHistory = filterCompatibleMessages(conversationHistory);
+  let workingHistory = withoutSystemMessages(
+    filterCompatibleMessages(conversationHistory),
+  );
   const preCheckTokens = estimateMessagesTokens([
     { role: "system", content: SYSTEM_PROMPT },
     ...workingHistory,
@@ -664,7 +670,7 @@ The key line is:
 history = await runAgent(prompt, history, callbacks);
 ```
 
-The first turn starts with an empty history. The second turn receives the messages returned from the first turn, so the estimated token count should be much larger.
+The first turn starts with an empty history. The second turn receives the durable messages returned from the first turn, so the estimated token count should be much larger. The per-run system prompt is added fresh inside `runAgent()` and is not saved into `history`.
 
 Run it:
 

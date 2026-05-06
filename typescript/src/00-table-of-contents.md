@@ -76,7 +76,7 @@ Give your agent the power to run shell commands. Add a code execution tool that 
 Build an approval system for dangerous operations. Create a terminal UI with React and Ink that lets users approve or reject tool calls before execution.
 
 ### [Chapter 10: Going to Production](./10-going-to-production.md)
-What's missing between your learning agent and a production agent. This overview links to focused production notes on reliability, memory, security, tooling, and agent architecture, then closes with a production readiness checklist and recommended reading.
+What's missing between your learning agent and a production agent. This overview links to focused production notes on reliability, memory, security, tooling, agent planning, and multi-agent architecture, then closes with a production readiness checklist and recommended reading.
 
 ### [Chapter 11: Session System](./11-session-system.md)
 Persist conversations as durable sessions. Add session IDs, save/load helpers, resume behavior, and transcript-friendly storage.

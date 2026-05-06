@@ -25,7 +25,7 @@ Rust, Go, Java, and Vibe Coding drafts are not part of v1. They may return later
 - Updated eval chapters to support configurable models and judge models through environment variables.
 - Expanded the production chapter with concrete sections on retries, persistent memory, sandboxing, prompt injection defense, rate and cost controls, tool result limits, parallel tool execution, cancellation, structured logging, planning, multi-agent orchestration, and real tool testing.
 - Split the expanded production material into ordered Chapter 10 subdocs:
-  `10a-production-reliability.md`, `10b-production-memory.md`, `10c-production-security.md`, `10d-production-tooling.md`, and `10e-production-agent-architecture.md`.
+  `10a-production-reliability.md`, `10b-production-memory.md`, `10c-production-security.md`, `10d-production-tooling.md`, `10e-production-agent-planning.md`, and `10f-production-multi-agent-architecture.md`.
 - Added an advanced production track, Chapters 11-20, covering sessions, diff-based editing, permission rules, advanced shell execution, plugins/MCP, provider profiles, context assembly, terminal UI hardening, subagents, and fixture-based coding evals.
 - Updated the TypeScript table of contents, book summary, and Chapter 9/10 navigation to reflect the new production track.
 

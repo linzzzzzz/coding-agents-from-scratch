@@ -15,8 +15,9 @@ This chapter is now split into focused production notes. Start with the area tha
 - **[Reliability](./10a-production-reliability.md)** — retries, rate limiting, cancellation, and structured logging.
 - **[Memory](./10b-production-memory.md)** — conversation memory, semantic memory, and practical memory tests.
 - **[Security](./10c-production-security.md)** — command sandboxing, directory scoping, and prompt-injection defenses.
-- **[Tooling](./10d-production-tooling.md)** — tool result size limits, parallel execution, and real tool integration tests.
-- **[Agent Architecture](./10e-production-agent-architecture.md)** — planning and multi-agent orchestration patterns.
+- **[Tooling](./10d-production-tooling.md)** — tool result size limits, parallel execution, and real tool integration tests. See also the [tool orchestration reference](./10d-production-tool-orchestration-reference.md) for OpenCode and Claude Code patterns.
+- **[Agent Planning](./10e-production-agent-planning.md)** — plan/build mode, approval flow, and read-only planning enforcement.
+- **[Multi-Agent Architecture](./10f-production-multi-agent-architecture.md)** — routing tasks to specialized agents and orchestration patterns.
 
 ---
 
@@ -64,7 +65,7 @@ The most important book on this list. Covers the full production AI stack: promp
 
 **[AI Agents: Multi-Agent Systems and Orchestration Patterns](https://www.amazon.com/dp/B0F1YV2Q5Y)** — Victor Dibia (2025)
 
-The closest match to what we've built, but taken much further. 15 chapters covering 6 orchestration patterns, 4 UX principles, evaluation methods, failure modes, and case studies. Particularly strong on multi-agent coordination — the topic our Chapter 10 only sketches. Read this when you're ready to move from single-agent to multi-agent systems.
+The closest match to what we've built, but taken much further. 15 chapters covering 6 orchestration patterns, 4 UX principles, evaluation methods, failure modes, and case studies. Particularly strong on multi-agent coordination — the topic our multi-agent architecture chapter only sketches. Read this when you're ready to move from single-agent to multi-agent systems.
 
 **[The Agentic AI Book](https://book.ryanrad.org/)** — Dr. Ryan Rad
 

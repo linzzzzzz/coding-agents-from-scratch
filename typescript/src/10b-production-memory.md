@@ -80,6 +80,8 @@ setConversationHistory(newHistory);
 await saveConversation("default", newHistory);
 ```
 
+`newHistory` should be durable conversation history only. Do not persist the per-run system prompt, because the agent adds a fresh system prompt every time `runAgent()` starts.
+
 Now the flow is:
 
 ```txt
@@ -331,6 +333,8 @@ const messages: ModelMessage[] = [
   { role: "user", content: userMessage },
 ];
 ```
+
+Keep this `systemPrompt` ephemeral: use it for token estimation and the current model call, but return/save conversation history without `system` messages.
 
 ### Minimal Test
 
