@@ -331,7 +331,26 @@ Our evals use mocked tools. That's good for testing LLM behavior, but it doesn't
 
 ### The Fix
 
-Add integration tests alongside mock-based evals:
+Add integration tests alongside mock-based evals. Keep these in `tests/`, not
+`evals/`: evals measure whether the model chooses the right behavior, while
+these tests check that the real tool implementation works without involving the
+model.
+
+Install a small test runner:
+
+```bash
+npm install -D vitest
+```
+
+Add a test script to `package.json`:
+
+```json
+{
+  "scripts": {
+    "test": "vitest run"
+  }
+}
+```
 
 Create an integration test file:
 
@@ -343,7 +362,7 @@ import fs from "fs/promises";
 import { executeTool } from "../src/agent/executeTool.ts";
 
 describe("file tools (integration)", () => {
-  const testDir = "/tmp/agent-test-" + Date.now();
+  const testDir = ".agent-test";
 
   afterEach(async () => {
     // Clean up test files
@@ -364,7 +383,7 @@ describe("file tools (integration)", () => {
 
   it("readFile returns error for missing file", async () => {
     const result = await executeTool("readFile", {
-      path: "/nonexistent/file.txt",
+      path: `${testDir}/missing.txt`,
     });
     expect(result).toContain("File not found");
   });
@@ -376,6 +395,12 @@ describe("file tools (integration)", () => {
     expect(result).toContain("No such file");
   });
 });
+```
+
+Run it:
+
+```bash
+npm test
 ```
 
 ---
