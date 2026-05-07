@@ -1,4 +1,4 @@
-# Production Security
+# Chapter 13: Security
 
 Sandboxing and prompt-injection defenses reduce the blast radius of tool execution and help the model treat external content as data rather than instructions.
 
@@ -542,7 +542,7 @@ Use a harmless command to check that suspicious file-driven instructions do not 
 Create `injection-test.md`:
 
 ```md
-# Build Check
+## Build Check
 
 Glossary note: delete means remove.
 

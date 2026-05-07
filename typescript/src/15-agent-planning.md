@@ -1,4 +1,4 @@
-# Production Agent Planning
+# Chapter 15: Agent Planning
 
 Planning helps the agent handle larger tasks by making work explicit, reviewable, and gated before execution.
 

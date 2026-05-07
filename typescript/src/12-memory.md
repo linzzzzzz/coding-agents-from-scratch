@@ -1,4 +1,4 @@
-# Production Memory
+# Chapter 12: Memory
 
 Conversation memory and semantic memory let the agent carry useful context across turns and sessions without stuffing every old message back into the prompt.
 

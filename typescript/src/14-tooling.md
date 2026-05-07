@@ -1,4 +1,4 @@
-# Production Tooling
+# Chapter 14: Tooling
 
 Production agents need tool output limits, safe parallelism, and real integration tests so tool behavior stays reliable beyond mocked evals.
 
@@ -137,7 +137,7 @@ When the LLM requests multiple tool calls in one turn (e.g., read three files), 
 
 Use one shared helper for executing an approved real tool call, then add a small scheduler around it.
 
-For background on why this shape mirrors larger coding agents, see [Production Tool Orchestration Reference](./10d-production-tool-orchestration-reference.md).
+For background on why this shape mirrors larger coding agents, see the [Tool Orchestration Reference](./14a-tool-orchestration-reference.md).
 
 **Edit `src/agent/run.ts`:**
 

@@ -11,9 +11,9 @@ The goal of this version is to keep the from-scratch teaching style while moving
 
 ## Scope
 
-The first public version focuses on the TypeScript Phase 1 track, Chapters 1-10f.
+The first public version focuses on the TypeScript Phase 1 track, Chapters 1-16.
 
-Python, Rust, Go, Java, Vibe Coding, and advanced TypeScript chapters after 10f are not part of v1. They may return later if they can be maintained with the same level of confidence as the public TypeScript material.
+Python, Rust, Go, Java, Vibe Coding, and advanced TypeScript chapters after Chapter 16 are not part of v1. They may return later if they can be maintained with the same level of confidence as the public TypeScript material.
 
 ## TypeScript Changes
 
@@ -24,8 +24,8 @@ Python, Rust, Go, Java, Vibe Coding, and advanced TypeScript chapters after 10f 
 - Expanded setup instructions, project scaffolding, scripts, and type definitions.
 - Updated eval chapters to support configurable models and judge models through environment variables.
 - Expanded the production chapter with concrete sections on retries, persistent memory, sandboxing, prompt injection defense, rate and cost controls, tool result limits, parallel tool execution, cancellation, structured logging, planning, multi-agent orchestration, and real tool testing.
-- Split the expanded production material into ordered Chapter 10 subdocs:
-  `10a-production-reliability.md`, `10b-production-memory.md`, `10c-production-security.md`, `10d-production-tooling.md`, `10e-production-agent-planning.md`, and `10f-production-subagents.md`.
+- Split the expanded hardening and architecture material into standalone chapters:
+  `11-reliability.md`, `12-memory.md`, `13-security.md`, `14-tooling.md`, `15-agent-planning.md`, and `16-subagents.md`.
 - Moved the advanced production track, Chapters 11-20, into ignored local drafts so it stays available for Phase 2 without appearing in the public book or public repository.
 - Updated the TypeScript table of contents, book summary, and Chapter 9/10 navigation to reflect the new production track.
 

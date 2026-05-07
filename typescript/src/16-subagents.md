@@ -1,4 +1,4 @@
-# Production Subagents
+# Chapter 16: Subagents
 
 Production coding agents usually do not route the entire user turn to a different top-level agent. They keep one primary agent in charge of the conversation, then let that agent delegate bounded work to specialized subagents.
 

@@ -48,6 +48,8 @@ By the end of this book, you'll have a working CLI AI agent that can:
 
 ## Table of Contents
 
+## Part I: Agent Foundations
+
 ### [Chapter 1: Introduction to AI Agents](./01-intro-to-agents.md)
 What are AI agents? How do they differ from simple chatbots? Set up the project from scratch and make your first LLM call.
 
@@ -63,6 +65,8 @@ Implement the core agent loop — stream responses, detect tool calls, execute t
 ### [Chapter 5: Multi-Turn Evaluations](./05-multi-turn-evals.md)
 Test full agent conversations with mocked tools. Use LLM-as-judge to score output quality. Evaluate tool ordering and forbidden tool avoidance.
 
+## Part II: Real-World Capabilities
+
 ### [Chapter 6: File System Tools](./06-file-system-tools.md)
 Add real filesystem tools — read, write, list, and delete files. Handle errors gracefully and give your agent the ability to work with your codebase.
 
@@ -75,12 +79,34 @@ Give your agent the power to run shell commands. Add a code execution tool that 
 ### [Chapter 9: Human-in-the-Loop](./09-human-in-the-loop.md)
 Build an approval system for dangerous operations. Create a terminal UI with React and Ink that lets users approve or reject tool calls before execution.
 
-### [Chapter 10: Going to Production](./10-going-to-production.md)
-What's missing between your learning agent and a production agent. This overview links to focused production notes on reliability, memory, security, tooling, agent planning, and subagents, then closes with a production readiness checklist and recommended reading.
+## Part III: Hardening the Agent
+
+### [Chapter 10: From Prototype to Product](./10-from-prototype-to-product.md)
+What's missing between your learning agent and a serious coding agent. This overview links to focused chapters on reliability, memory, security, tooling, agent planning, and subagents, then closes with a hardening checklist and recommended reading.
+
+### [Chapter 11: Reliability](./11-reliability.md)
+Add retries, rate limits, cancellation, and structured logging so failures become visible and recoverable.
+
+### [Chapter 12: Memory](./12-memory.md)
+Persist useful conversation and semantic memory without turning every run into a permanent transcript.
+
+### [Chapter 13: Security](./13-security.md)
+Scope filesystem access, sandbox shell execution, and defend against prompt injection from tool results.
+
+### [Chapter 14: Tooling](./14-tooling.md)
+Keep tool results bounded, run safe tools in parallel, and test real integrations. Includes a [tool orchestration reference](./14a-tool-orchestration-reference.md).
+
+## Part IV: Agent Architecture
+
+### [Chapter 15: Agent Planning](./15-agent-planning.md)
+Add plan/build mode, approval flow, and read-only planning enforcement for more deliberate agent work.
+
+### [Chapter 16: Subagents](./16-subagents.md)
+Delegate bounded work to specialized agents, closer to OpenCode and Claude Code's architecture.
 
 ## Phase 2
 
-Phase 1 ends at Chapter 10f. Draft chapters for sessions, diff-based editing, permission rules, advanced shell execution, MCP/plugins, provider profiles, context engines, production UI, advanced subagents, and fixture-based evals are held back for Phase 2.
+Phase 1 ends at Chapter 16. Draft chapters for sessions, diff-based editing, permission rules, advanced shell execution, MCP/plugins, provider profiles, context engines, production UI, advanced subagents, and fixture-based evals are held back for Phase 2.
 
 See the root `ROADMAP.md` in the repository for the planned next track.
 

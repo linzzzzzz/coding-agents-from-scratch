@@ -769,7 +769,7 @@ Congratulations — you've built a CLI AI agent from scratch. Every line of code
 
 The core learning agent is complete. The next chapters harden it toward OpenCode- and Claude Code-style production behavior:
 
-- **Going to Production** — Understand the remaining gaps and production checklist
+- **From Prototype to Product** — Understand the remaining gaps and hardening checklist
 - **Session system** — Save, resume, and inspect durable conversations
 - **Diff-based edits** — Preview file changes before applying them
 - **Permission rules** — Move from "ask every time" to configurable policy
@@ -782,4 +782,4 @@ The architecture supports all of these. The callback system, tool registry, and 
 
 ---
 
-**Next: [Chapter 10: Going to Production →](./10-going-to-production.md)**
+**Next: [Chapter 10: From Prototype to Product →](./10-from-prototype-to-product.md)**

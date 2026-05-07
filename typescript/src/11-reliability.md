@@ -1,4 +1,4 @@
-# Production Reliability
+# Chapter 11: Reliability
 
 Retries, rate limits, cancellation, and structured logging keep the agent useful when providers fail, users interrupt work, or usage starts to scale.
 

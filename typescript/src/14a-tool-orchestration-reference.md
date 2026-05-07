@@ -1,4 +1,4 @@
-# Production Tool Orchestration Reference
+# Tool Orchestration Reference
 
 OpenCode and Claude Code both support parallel tool work, but they do it with a few production guardrails. The important lesson is not "use `Promise.all` everywhere." The lesson is: classify tool calls, schedule them safely, and send every result through the same execution pipeline.
 
