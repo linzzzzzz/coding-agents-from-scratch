@@ -10,6 +10,46 @@ A hands-on course for building CLI AI coding agents with tool calling, streaming
 
 This course starts from the clean educational architecture of a small agent, then pushes it closer to the shape of real coding agents such as OpenCode and Claude Code.
 
+## Quick Start
+
+Start reading here: [Building Production AI Coding Agents from Scratch](https://linzzzzzz.github.io/coding-agents-from-scratch/).
+
+Or open [Chapter 1](./typescript/src/01-intro-to-agents.md) directly on GitHub.
+
+## What You'll Build
+
+A CLI coding agent that can:
+
+- Call OpenAI-compatible LLM APIs with structured tool definitions
+- Stream responses and execute tools inside an agent loop
+- Read, write, list, and delete files
+- Run shell commands and execute code
+- Search the web for current information
+- Manage context windows with token estimation and compaction
+- Ask for human approval before dangerous operations
+- Run single-turn and multi-turn evaluations
+- Add reliability features like retries, cancellation, usage limits, and structured logging
+- Persist useful memories without turning every run into permanent context
+- Harden tool execution with path validation, result wrapping, output limits, and real integration tests
+- Add planning mode and production-style subagents for larger coding tasks
+
+## Course Outline
+
+| Part | Chapters | What You'll Learn |
+| --- | --- | --- |
+| **I. Agent Basics** | 1-5 | LLM calls, tool calling, evals, streaming, and the core agent loop |
+| **II. Real-World Capabilities** | 6-9 | File tools, web search, context management, shell execution, and human approval |
+| **III. Hardening the Agent** | 10-14 | Reliability, memory, security, tool orchestration, logging, and real tool tests |
+| **IV. Agent Architecture** | 15-16 | Planning mode, approval-based execution, and production-style subagents |
+
+## Roadmap
+
+Planned additions include:
+
+- Python version
+- Session management
+- MCP, plugins, and skills
+
 ## Inspiration and Credits
 
 This project is inspired by:
@@ -30,26 +70,6 @@ The goal is not to clone those projects. The goal is to teach the architecture b
 - Refreshes the website and course positioning so the project stands on its own while preserving attribution
 
 See [Changes from Upstream](./CHANGES_FROM_UPSTREAM.md) for a concise summary of the major differences.
-
-## Editions
-
-- **TypeScript**: Vercel AI SDK, Zod schemas, React + Ink terminal UI
-
-The first public version focuses on the TypeScript Phase 1 track, from Chapter 1 through Chapter 16. Python and later TypeScript chapters are held back until they are ready for the same level of review.
-
-## What You'll Build
-
-A CLI coding agent that can:
-
-- Call OpenAI-compatible LLM APIs with structured tool definitions
-- Stream responses and execute tools inside an agent loop
-- Read, write, list, and delete files
-- Run shell commands and execute code
-- Search the web for current information
-- Manage context windows with token estimation and compaction
-- Ask for human approval before dangerous operations
-- Run single-turn and multi-turn evaluations
-- Apply production readiness patterns around safety, observability, cost, and reliability
 
 ## Local Development
 
