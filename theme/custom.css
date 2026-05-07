@@ -21,3 +21,23 @@ table th, table td {
     padding: 0.5rem 1rem;
     text-align: left;
 }
+
+.language-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: 0.75rem;
+    padding: 0.25rem 0.55rem;
+    border: 1px solid var(--sidebar-spacer);
+    border-radius: 999px;
+    color: var(--fg);
+    font-size: 0.82rem;
+    line-height: 1;
+    text-decoration: none;
+}
+
+.language-switch:hover {
+    text-decoration: none;
+    border-color: var(--links);
+    color: var(--links);
+}

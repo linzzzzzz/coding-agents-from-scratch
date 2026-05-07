@@ -25,9 +25,10 @@ jobs:
         with:
           mdbook-version: 'latest'
 
-      - name: Build TypeScript edition
+      - name: Build TypeScript editions
         run: |
           cd typescript && mdbook build && cd ..
+          cd typescript-zh && mdbook build && cd ..
           cp index.html docs/index.html
 
       - name: Upload artifact

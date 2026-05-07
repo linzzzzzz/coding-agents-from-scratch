@@ -1,11 +1,11 @@
 [book]
 authors = ["Course Maintainers"]
-language = "en"
+language = "zh-CN"
 src = "src"
-title = "Building Production AI Coding Agents — TypeScript Edition"
+title = "从零构建生产级 AI Coding Agent — TypeScript 版"
 
 [build]
-build-dir = "../docs/typescript"
+build-dir = "../docs/typescript-zh"
 
 [output.html]
 default-theme = "rust"
