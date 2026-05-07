@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/banner-zero-to-prod-light-notext.jpg" alt="Terminal prompt flowing into an agent loop and production check" width="100%">
+  <img src="./assets/banner-zero-to-prod-light-notext-slim.jpg" alt="Terminal prompt flowing into an agent loop and production check" width="100%">
 </p>
 
 # Building Production AI Coding Agents from Scratch
