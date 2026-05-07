@@ -49,12 +49,14 @@ A CLI coding agent that can:
 
 ## Local Development
 
-Requires [mdBook](https://rust-lang.github.io/mdBook/):
+Requires [mdBook](https://rust-lang.github.io/mdBook/). On macOS, install it with Homebrew:
 
 ```bash
-cargo install mdbook
+brew install mdbook
 ./build.sh
 ```
+
+If you prefer Cargo, `cargo install mdbook` works too.
 
 Open `docs/index.html` after building.
 

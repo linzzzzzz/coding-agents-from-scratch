@@ -49,12 +49,14 @@
 
 ## 本地开发
 
-需要安装 [mdBook](https://rust-lang.github.io/mdBook/)：
+需要安装 [mdBook](https://rust-lang.github.io/mdBook/)。在 macOS 上可以用 Homebrew 安装：
 
 ```bash
-cargo install mdbook
+brew install mdbook
 ./build.sh
 ```
+
+如果你更喜欢 Cargo，也可以使用 `cargo install mdbook`。
 
 构建完成后打开 `docs/index.html`。
 
