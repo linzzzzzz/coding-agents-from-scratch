@@ -221,8 +221,6 @@ mkdir -p src/ui/components
 
 Let's make sure everything works. Create `src/index.ts`:
 
-> Prefer the original OpenAI-only setup? It is preserved in [`01-intro-to-agents.original-openai.md`](./01-intro-to-agents.original-openai.md).
-
 ```typescript
 import { generateText } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";

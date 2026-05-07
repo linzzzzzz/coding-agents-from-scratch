@@ -117,9 +117,9 @@
 
         .editions {
             display: grid;
-            grid-template-columns: minmax(260px, 640px);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             justify-content: center;
-            gap: 1.5rem;
+            gap: 1rem;
             margin-top: 3rem;
         }
 
@@ -127,22 +127,18 @@
             background: #161b22;
             border: 1px solid #30363d;
             border-radius: 8px;
-            padding: 2rem;
+            padding: 1.5rem;
             text-decoration: none;
             color: inherit;
             transition: border-color 0.2s, transform 0.2s;
             display: flex;
             flex-direction: column;
+            min-height: 260px;
         }
 
         .card:hover {
             border-color: #58a6ff;
             transform: translateY(-2px);
-        }
-
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
         }
 
         .card h2 {
@@ -153,6 +149,7 @@
 
         .card .lang-tag {
             display: inline-block;
+            align-self: flex-start;
             font-size: 0.75rem;
             font-weight: 600;
             padding: 0.2rem 0.6rem;
@@ -301,19 +298,17 @@
 
         <div class="editions">
             <a href="typescript/index.html" class="card">
-                <div class="card-icon">TS</div>
-                <span class="lang-tag tag-ts">TypeScript</span>
+                <span class="lang-tag tag-ts">English</span>
                 <h2>TypeScript Edition</h2>
-                <p>Built with the Vercel AI SDK, Zod schemas, and React + Ink for the terminal UI. Phase 1 runs from the intro through production subagents.</p>
-                <div class="chapters">Phase 1: Chapters 1-16</div>
+                <p>Build a TypeScript coding agent with the Vercel AI SDK, Zod schemas, and React + Ink for the terminal UI.</p>
+                <div class="chapters">Chapters 1-16</div>
             </a>
 
             <a href="typescript-zh/index.html" class="card">
-                <div class="card-icon">中</div>
-                <span class="lang-tag tag-ts">TypeScript</span>
+                <span class="lang-tag tag-ts">中文</span>
                 <h2>TypeScript 中文版</h2>
-                <p>与英文版保持相同章节结构，支持逐页语言切换，方便后续逐章翻译和校对。</p>
-                <div class="chapters">Phase 1：第 1-16 章</div>
+                <p>中文版本保持相同章节结构，并支持在 mdBook 页面中逐页切换语言。</p>
+                <div class="chapters">第 1-16 章</div>
             </a>
         </div>
 

@@ -171,8 +171,6 @@ The registry is a plain object mapping tool names to tool definitions. The AI SD
 
 Let's test this with a simple script. Update `src/index.ts`:
 
-> Prefer the original OpenAI-only setup? It is preserved in [`02-tool-calling.original-openai.md`](./02-tool-calling.original-openai.md).
-
 ```typescript
 import { generateText } from "ai";
 import { createOpenAI } from "@ai-sdk/openai";

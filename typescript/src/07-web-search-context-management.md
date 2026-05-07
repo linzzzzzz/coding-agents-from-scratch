@@ -15,8 +15,6 @@ These are related because web search results can be large, which accelerates con
 
 OpenAI provides a native web search tool, but many OpenAI-compatible Chat Completions providers do not expose that AI SDK provider tool. For the provider-compatible path, we'll build web search as a normal local tool that calls a search API from our own code.
 
-> Prefer the original OpenAI-native `webSearch` provider tool? It is preserved in [`07-web-search-context-management.original-openai.md`](./07-web-search-context-management.original-openai.md).
-
 Add a search API key to `.env`:
 
 ```env
