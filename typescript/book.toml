@@ -8,6 +8,6 @@ title = "Building Production AI Coding Agents — TypeScript Edition"
 build-dir = "../docs/typescript"
 
 [output.html]
-default-theme = "navy"
+default-theme = "rust"
 preferred-dark-theme = "navy"
 additional-css = ["../theme/custom.css"]

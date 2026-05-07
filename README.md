@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/banner-zero-to-prod-light-notext.jpg" alt="Terminal prompt flowing into an agent loop and production check" width="100%">
+</p>
+
 # Building Production AI Coding Agents from Scratch
 
 [简体中文](./README.zh-CN.md) | English
@@ -31,7 +35,7 @@ See [Changes from Upstream](./CHANGES_FROM_UPSTREAM.md) for a concise summary of
 
 - **TypeScript**: Vercel AI SDK, Zod schemas, React + Ink terminal UI
 
-The first public version focuses on the TypeScript Phase 1 track, from Chapter 1 through Chapter 10f. Python and later TypeScript chapters are held back until they are ready for the same level of review.
+The first public version focuses on the TypeScript Phase 1 track, from Chapter 1 through Chapter 16. Python and later TypeScript chapters are held back until they are ready for the same level of review.
 
 ## What You'll Build
 

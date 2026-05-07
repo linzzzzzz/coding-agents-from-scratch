@@ -31,7 +31,7 @@
 
 - **TypeScript**：Vercel AI SDK、Zod schema、React + Ink 终端 UI
 
-第一版公开发布只包含 TypeScript Phase 1，也就是第 1 章到第 10f 章。Python 版本和后续 TypeScript 章节会先保留为草稿，等内容质量足够稳定后再发布。
+第一版公开发布只包含 TypeScript Phase 1，也就是第 1 章到第 16 章。Python 版本和后续 TypeScript 章节会先保留为草稿，等内容质量足够稳定后再发布。
 
 ## 你会构建什么
 
