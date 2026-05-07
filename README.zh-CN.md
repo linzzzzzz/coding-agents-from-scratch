@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/banner-zero-to-prod-light-notext.jpg" alt="终端提示进入 agent 循环并完成生产检查" width="100%">
+</p>
+
 # 从零构建生产级 AI Coding Agent
 
 [English](./README.md) | 简体中文
