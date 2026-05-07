@@ -137,6 +137,17 @@ const provider = createOpenAI({
   baseURL: process.env.LLM_BASE_URL,
 });
 
+// Keep evals focused on tool selection by preventing the AI SDK from executing tools.
+function withoutToolExecutors(toolSet: ToolSet): ToolSet {
+  const modelTools: ToolSet = {};
+
+  for (const [name, toolDef] of Object.entries(toolSet)) {
+    modelTools[name] = { ...toolDef, execute: undefined } as ToolSet[string];
+  }
+
+  return modelTools;
+}
+
 export async function singleTurnExecutor(
   data: EvalData,
   availableTools: ToolSet,
@@ -158,7 +169,7 @@ export async function singleTurnExecutor(
         "qwen3.5-flash-2026-02-23",
     ),
     messages,
-    tools,
+    tools: withoutToolExecutors(tools),
     stopWhen: stepCountIs(1), // Single step - just get tool selection
     temperature: data.config?.temperature ?? undefined,
   });
@@ -178,6 +189,8 @@ export async function singleTurnExecutor(
   };
 }
 ```
+
+This eval uses `generateText()` because it is testing whether the model chooses the right tools, not teaching the production execution loop. We pass model-facing tools without `execute` functions so the eval records tool selection without doing real file I/O. In Chapter 4, the agent runtime will collect tool requests and execute tools itself.
 
 Key detail: `stopWhen: stepCountIs(1)`. This tells the AI SDK to stop after one step — we only want to see which tools the LLM *selects*, not what happens when they run. This makes the eval fast and deterministic (no actual file I/O).
 

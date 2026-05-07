@@ -53,6 +53,8 @@ const toolResult = truncateResult(rawToolResult);
 
 Use `toolResult` for `callbacks.onToolCallEnd(...)`, conversation history, and anything sent back to the model. Keep `rawToolResult` only if you need full local logs or debugging output.
 
+This belongs on the real execution path after approval. The model still receives `modelTools`; only the agent loop calls executable tools and prepares their results for history.
+
 For file tools specifically, add pagination:
 
 **Edit `src/agent/tools/file.ts`:**
@@ -133,7 +135,7 @@ When the LLM requests multiple tool calls in one turn (e.g., read three files), 
 
 ### The Fix
 
-Use one shared helper for executing a tool call, then add a small scheduler around it.
+Use one shared helper for executing an approved real tool call, then add a small scheduler around it.
 
 For background on why this shape mirrors larger coding agents, see [Production Tool Orchestration Reference](./10d-production-tool-orchestration-reference.md).
 
@@ -169,7 +171,7 @@ function partitionToolCalls(toolCalls: ToolCallInfo[]): ToolBatch[] {
 }
 ```
 
-Then extract the shared execution work into one helper inside `runAgent`, near the tool loop:
+Then extract the shared execution work into one helper inside `runAgent`, near the tool loop. This helper should use the executable tool registry, not the schema-only `modelTools` passed to `streamText()`.
 
 If your logger does not have this event yet, add `"tool_execution_started"` to the `LogEvent` union and add this method to `src/agent/logger.ts`:
 

@@ -98,7 +98,7 @@ export const webSearch = tool({
 });
 ```
 
-This is a regular local tool, so our code executes the search request and returns text back to the model.
+This is a regular local tool, so our agent loop can execute the search request and return text back to the model.
 
 ### Provider Tools vs. Local Tools
 
@@ -110,7 +110,7 @@ Provider tools are fundamentally different from our local tools. With `readFile`
 4. Results come back as a tool result
 5. The LLM processes them and continues
 
-Because this version is a local tool, we do see the raw search results and our `executeTool` function can execute it. The provider-tool check still matters if you later add OpenAI-native tools:
+Because this version is a local tool, we do see the raw search results and our `executeTool` function can execute it after the model requests it. The provider-tool check still matters if you later add OpenAI-native tools:
 
 ```typescript
 const execute = tool.execute;

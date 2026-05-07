@@ -8,6 +8,8 @@ So far our agent can read files and list directories. That's useful for answerin
 
 These are the first **dangerous tools** in our agent. Reading files is harmless. Writing and deleting files can cause damage. This distinction will become important in Chapter 9 when we add human-in-the-loop approval.
 
+The tools still define `execute` functions, but remember the pattern from Chapter 4: the model sees schema-only tools, and our agent loop decides when to execute the real tools.
+
 ## Write File Tool
 
 Add `writeFile` to `src/agent/tools/file.ts`:
@@ -272,6 +274,8 @@ The agent should:
 2. Call `readFile` to verify the contents
 3. Respond confirming the file was created and verified
 
+For now, `onToolApproval: async () => true` means the loop auto-approves every tool call. In Chapter 9, we'll replace that with a real user approval prompt for dangerous tools.
+
 ## Adding File Tools Evals
 
 Create `evals/data/file-tools.json` with test cases that cover the new tools:
@@ -356,7 +360,7 @@ In this chapter you:
 - Understood the importance of tool descriptions in influencing LLM behavior
 - Updated the tool registry and eval datasets
 
-The agent can now read, write, list, and delete files. But these write and delete operations are dangerous — there's nothing stopping the agent from overwriting important files or deleting your source code. We'll fix that in Chapter 9 with human-in-the-loop approval. But first, let's add more capabilities.
+The agent can now read, write, list, and delete files. But these write and delete operations are dangerous — the loop currently auto-approves them, so there's nothing stopping the agent from overwriting important files or deleting your source code. We'll fix that in Chapter 9 with human-in-the-loop approval. But first, let's add more capabilities.
 
 ---
 

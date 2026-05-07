@@ -4,11 +4,13 @@
 
 ## The Safety Layer
 
-We've built an agent with seven tools. Four of them can modify your system: writeFile, deleteFile, runCommand, and executeCode. Right now, the agent auto-approves everything — if the LLM says "delete this file," it happens immediately.
+We've built an agent with seven tools. Four of them can modify your system: writeFile, deleteFile, runCommand, and executeCode. Right now, the agent auto-approves everything — if the LLM requests `deleteFile`, the loop executes it without asking.
 
 Human-in-the-Loop (HITL) means the agent pauses before dangerous operations and asks the user: "I want to do this. Should I proceed?"
 
 This is the final piece. After this chapter, you'll have a complete, safe CLI agent.
+
+This builds on the Chapter 4 execution pattern: `streamText()` receives model-facing tools without `execute` functions, and the agent loop keeps the real executable tools. That separation is what lets us ask for approval before anything dangerous runs.
 
 ## The Architecture
 
@@ -16,19 +18,30 @@ HITL fits into the agent loop we built in Chapter 4. The flow becomes:
 
 ```
 1. LLM requests tool call
-2. Is this tool dangerous?
+2. Agent loop receives the request before execution
+3. Is this tool dangerous?
    - No (readFile, listFiles, webSearch) → Execute immediately
    - Yes (writeFile, deleteFile, runCommand, executeCode) → Ask for approval
-3. User approves → Execute
+4. User approves → Execute
    User rejects → Stop the loop, return what we have
-4. Continue
+5. Continue
 ```
 
 The approval mechanism uses the `onToolApproval` callback we defined in our `AgentCallbacks` interface back in Chapter 1. Let's wire it up.
 
 ## Updating the Agent Loop
 
-The agent loop from Chapter 4 already has the callback. Here's the critical section in `src/agent/run.ts`:
+The agent loop from Chapter 4 already keeps tool execution under our control. The important part is that `streamText()` gets `modelTools`, while execution uses the real tools through `executeTool()`:
+
+```typescript
+const result = streamText({
+  model: provider.chat(MODEL_NAME),
+  messages,
+  tools: modelTools,
+});
+```
+
+Now add approval before the loop executes each requested tool. Here's the critical section in `src/agent/run.ts`:
 
 ```typescript
 // Process tool calls sequentially with approval for each
@@ -684,6 +697,8 @@ Tool Approval Required
 9. The Promise resolves with `true` → the agent loop continues
 10. `executeTool("writeFile", ...)` runs → file is created
 11. The agent loop continues, LLM generates response text
+
+The file is not created when the model first requests `writeFile`. It is only created after the approval Promise resolves and the loop calls `executeTool()`.
 
 If the user had selected "No":
 - The Promise resolves with `false`

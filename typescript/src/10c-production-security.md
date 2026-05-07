@@ -376,9 +376,9 @@ function wrapToolResult(toolName: string, result: string): string {
 }
 ```
 
-Then use it where the agent pushes tool results back into the message history.
+Then use it where the agent executes the real tool and pushes the result back into the message history.
 
-Find this part of the tool loop:
+Find this part of the tool loop, after approval has already passed:
 
 ```typescript
 const toolResult = await executeTool(tc.toolName, tc.args);
@@ -397,7 +397,7 @@ messages.push({
 });
 ```
 
-Change it to:
+Change it to wrap the result before sending it back to the model:
 
 ```typescript
 const toolResult = await executeTool(tc.toolName, tc.args);

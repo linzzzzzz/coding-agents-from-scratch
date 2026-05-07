@@ -76,7 +76,7 @@ Give your agent the power to run shell commands. Add a code execution tool that 
 Build an approval system for dangerous operations. Create a terminal UI with React and Ink that lets users approve or reject tool calls before execution.
 
 ### [Chapter 10: Going to Production](./10-going-to-production.md)
-What's missing between your learning agent and a production agent. This overview links to focused production notes on reliability, memory, security, tooling, agent planning, and multi-agent architecture, then closes with a production readiness checklist and recommended reading.
+What's missing between your learning agent and a production agent. This overview links to focused production notes on reliability, memory, security, tooling, agent planning, and subagents, then closes with a production readiness checklist and recommended reading.
 
 ### [Chapter 11: Session System](./11-session-system.md)
 Persist conversations as durable sessions. Add session IDs, save/load helpers, resume behavior, and transcript-friendly storage.
@@ -102,8 +102,8 @@ Move beyond simple compaction. Build explicit context items, budget allocation, 
 ### [Chapter 18: Production Terminal UI](./18-production-terminal-ui.md)
 Turn the terminal UI into a workbench with sessions, slash commands, approval queues, diffs, tasks, and status surfaces.
 
-### [Chapter 19: Subagents](./19-subagents.md)
-Add specialized agents for planning, review, research, and tests. Learn when delegation helps and when it adds overhead.
+### [Chapter 19: Advanced Subagents](./19-subagents.md)
+Extend production subagents with resumable tasks, background runs, permissions, and isolated worktrees.
 
 ### [Chapter 20: Agent Evals at Scale](./20-agent-evals-at-scale.md)
 Move from mocked tool-selection evals to fixture-based coding evals with deterministic scoring and safety regression tests.

@@ -54,10 +54,12 @@ const result = await withRetry(async () =>
   streamText({
     model: provider.chat(MODEL_NAME),
     messages,
-    tools,
+    tools: modelTools,
   })
 );
 ```
+
+Keep using the model-facing `modelTools` from Chapter 4 here. Retries should repeat the model request, not accidentally execute real tools inside `streamText()`.
 
 ### Going Further
 
@@ -243,7 +245,7 @@ export async function runAgent(
       streamText({
         model: provider.chat(MODEL_NAME),
         messages,
-        tools,
+        tools: modelTools,
       })
     );
 
@@ -436,7 +438,7 @@ export async function runAgent(
     const result = streamText({
       model: provider.chat(MODEL_NAME),
       messages,
-      tools,
+      tools: modelTools,
       abortSignal: signal, // Pass to AI SDK
     });
 
@@ -727,7 +729,7 @@ const result = await withRetry(async () =>
   streamText({
     model: provider.chat(MODEL_NAME),
     messages,
-    tools,
+    tools: modelTools,
     allowSystemInMessages: true,
     experimental_telemetry: {
       isEnabled: true,
@@ -787,7 +789,7 @@ if (!approved) {
 }
 ```
 
-Around `executeTool`, measure how long the tool took:
+Around `executeTool`, measure how long the real tool took:
 
 ```typescript
 const toolStart = Date.now();

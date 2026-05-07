@@ -14,6 +14,8 @@ Tool calling is the mechanism that turns a language model into an agent. Here's 
 
 The critical insight: **the LLM doesn't execute the tools**. It outputs structured JSON saying "I want to call this tool with these arguments." Your code does the actual execution. The LLM is the brain; your code is the hands.
 
+In this chapter, the AI SDK will help us by calling each tool's `execute` function directly. Later, when we build our own agent loop, we will separate the model-visible tool schemas from the executable tools so our runtime controls exactly when tools run.
+
 ```
 User: "What's in my project directory?"
 
@@ -201,6 +203,8 @@ console.log("Text:", result.text);
 console.log("Tool calls:", JSON.stringify(result.toolCalls, null, 2));
 console.log("Tool results:", JSON.stringify(result.toolResults, null, 2));
 ```
+
+Because these tools include `execute` functions, `generateText()` can run the requested tool for this simple demo. That is useful while learning tool calling. In the agent loop, we will take over execution ourselves.
 
 Run it:
 

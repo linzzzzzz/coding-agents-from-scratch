@@ -33,7 +33,7 @@ In Chapter 2, we used `generateText()` which waits for the complete response bef
 const result = streamText({
   model,
   messages,
-  tools,
+  tools: modelTools,
 });
 
 for await (const chunk of result.fullStream) {
@@ -86,6 +86,17 @@ function withoutSystemMessages(messages: ModelMessage[]): ModelMessage[] {
   return messages.filter((message) => message.role !== "system");
 }
 
+function withoutToolExecutors<T extends Record<string, { execute?: unknown }>>(
+  toolSet: T,
+): T {
+  return Object.fromEntries(
+    Object.entries(toolSet).map(([name, toolDef]) => [
+      name,
+      { ...toolDef, execute: undefined },
+    ]),
+  ) as T;
+}
+
 export async function runAgent(
   userMessage: string,
   conversationHistory: ModelMessage[],
@@ -98,12 +109,13 @@ export async function runAgent(
   ];
 
   let fullResponse = "";
+  const modelTools = withoutToolExecutors(tools);
 
   while (true) {
     const result = streamText({
       model: provider.chat(MODEL_NAME),
       messages,
-      tools,
+      tools: modelTools,
       experimental_telemetry: {
         isEnabled: true,
         tracer: getTracer(),
@@ -208,11 +220,16 @@ This array grows as tools are called — tool results get appended. At the end o
 the run, we return `withoutSystemMessages(messages)` so the next turn receives
 only reusable user, assistant, and tool messages.
 
+`withoutToolExecutors()` makes a model-facing copy of our tools without
+`execute` functions. The model can still see tool names, descriptions, and
+schemas, but the AI SDK will not run tools automatically. That keeps execution
+inside our agent loop.
+
 ### The Loop
 
 ```typescript
 while (true) {
-  const result = streamText({ model, messages, tools });
+  const result = streamText({ model, messages, tools: modelTools });
   // ... process stream ...
   
   if (finishReason !== "tool-calls" || toolCalls.length === 0) {
@@ -224,7 +241,7 @@ while (true) {
 ```
 
 Each iteration:
-1. Sends the current messages to the LLM
+1. Sends the current messages and model-facing tool schemas to the LLM
 2. Streams the response, collecting text and tool calls
 3. Checks the `finishReason`:
    - `"tool-calls"` → The LLM wants tools executed. Do it and loop.
@@ -250,7 +267,7 @@ for (const tc of toolCalls) {
 ```
 
 For each tool call:
-1. Execute the tool using our dispatcher from Chapter 2
+1. Execute the real tool using our dispatcher from Chapter 2
 2. Notify the UI that the tool completed
 3. Add the result as a `tool` message, linked to the original `toolCallId`
 

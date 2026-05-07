@@ -164,6 +164,7 @@ const PLAN_MODE_BLOCKED_TOOLS = new Set([
   "writeFile",
   "deleteFile",
   "runCommand",
+  "executeCode",
 ]);
 
 function isBlockedInPlanMode(toolName: string): boolean {
@@ -171,7 +172,7 @@ function isBlockedInPlanMode(toolName: string): boolean {
 }
 ```
 
-Check this before approval and execution:
+Check this before approval and execution. With the Chapter 4 model/execution split, the model may still request these tools, but the runtime blocks them before any real `execute` function runs:
 
 **Edit `src/agent/run.ts`:**
 

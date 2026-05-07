@@ -13,6 +13,8 @@ A shell tool turns your agent into something genuinely powerful. With it, the ag
 
 It's also the most dangerous tool. A file write can damage one file. A shell command can damage your entire system. `rm -rf /` is just a string the LLM might generate. This is why Chapter 9 (Human-in-the-Loop) exists.
 
+As in the previous chapters, the tool has an `execute` function, but the model should not run it directly. The agent loop receives the tool request first, then decides whether execution is allowed.
+
 ## The Shell Tool
 
 Create `src/agent/tools/shell.ts`:
@@ -346,7 +348,7 @@ Mitigations (we'll implement the first one in Chapter 9):
 3. **Sandboxing** — Run commands in a container
 4. **Read-only mode** — Only allow commands that don't modify the system
 
-For our CLI agent, human approval is the right balance. The user is sitting at the terminal and can see what the agent wants to do before it runs.
+For our CLI agent, human approval is the right balance. The user is sitting at the terminal and can see what the agent wants to do before the loop runs the command.
 
 ## Summary
 
@@ -358,7 +360,7 @@ In this chapter you:
 - Used `z.enum()` to constrain LLM choices
 - Understood the security implications of shell access
 
-The agent now has seven tools: readFile, writeFile, listFiles, deleteFile, runCommand, executeCode, and webSearch. Four of them are dangerous (writeFile, deleteFile, runCommand, executeCode). In the final chapter, we'll add a human approval gate to keep the agent safe.
+The agent now has seven tools: readFile, writeFile, listFiles, deleteFile, runCommand, executeCode, and webSearch. Four of them are dangerous (writeFile, deleteFile, runCommand, executeCode). In the final chapter, we'll add a human approval gate before the loop executes those dangerous tools.
 
 ---
 
