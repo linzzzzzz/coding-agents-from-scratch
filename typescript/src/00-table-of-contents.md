@@ -78,35 +78,11 @@ Build an approval system for dangerous operations. Create a terminal UI with Rea
 ### [Chapter 10: Going to Production](./10-going-to-production.md)
 What's missing between your learning agent and a production agent. This overview links to focused production notes on reliability, memory, security, tooling, agent planning, and subagents, then closes with a production readiness checklist and recommended reading.
 
-### [Chapter 11: Session System](./11-session-system.md)
-Persist conversations as durable sessions. Add session IDs, save/load helpers, resume behavior, and transcript-friendly storage.
+## Phase 2
 
-### [Chapter 12: Editing with Diffs](./12-editing-with-diffs.md)
-Replace blind file overwrites with proposal-first edits. Generate unified diffs, ask for approval, and protect against stale edits.
+Phase 1 ends at Chapter 10f. Draft chapters for sessions, diff-based editing, permission rules, advanced shell execution, MCP/plugins, provider profiles, context engines, production UI, advanced subagents, and fixture-based evals are held back for Phase 2.
 
-### [Chapter 13: Permission Rules](./13-permission-rules.md)
-Move from asking every time to policy-based approval. Add allow/ask/deny rules for commands, tools, and paths.
-
-### [Chapter 14: Advanced Shell Tool](./14-advanced-shell-tool.md)
-Upgrade command execution with process spawning, timeouts, streaming output, and a path toward background tasks.
-
-### [Chapter 15: MCP and Plugins](./15-mcp-and-plugins.md)
-Make tools extensible. Load plugin manifests, dynamically import tool maps, and prepare the registry for MCP-style integrations.
-
-### [Chapter 16: Provider Layer](./16-provider-layer.md)
-Introduce model profiles for the main agent, summarizer, judge, memory extractor, and fallback models.
-
-### [Chapter 17: Context Engine](./17-context-engine.md)
-Move beyond simple compaction. Build explicit context items, budget allocation, file relevance, and tool-result truncation.
-
-### [Chapter 18: Production Terminal UI](./18-production-terminal-ui.md)
-Turn the terminal UI into a workbench with sessions, slash commands, approval queues, diffs, tasks, and status surfaces.
-
-### [Chapter 19: Advanced Subagents](./19-subagents.md)
-Extend production subagents with resumable tasks, background runs, permissions, and isolated worktrees.
-
-### [Chapter 20: Agent Evals at Scale](./20-agent-evals-at-scale.md)
-Move from mocked tool-selection evals to fixture-based coding evals with deterministic scoring and safety regression tests.
+See the root `ROADMAP.md` in the repository for the planned next track.
 
 ---
 

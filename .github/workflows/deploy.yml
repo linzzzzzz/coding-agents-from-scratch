@@ -25,14 +25,9 @@ jobs:
         with:
           mdbook-version: 'latest'
 
-      - name: Build all editions
+      - name: Build TypeScript edition
         run: |
           cd typescript && mdbook build && cd ..
-          cd python && mdbook build && cd ..
-          cd rust && mdbook build && cd ..
-          cd go && mdbook build && cd ..
-          cd java && mdbook build && cd ..
-          cd vibe-coding && mdbook build && cd ..
           cp index.html docs/index.html
 
       - name: Upload artifact

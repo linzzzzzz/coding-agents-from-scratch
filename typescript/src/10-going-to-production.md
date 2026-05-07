@@ -116,4 +116,4 @@ The agent loop you built in Chapter 4 is the foundation. Everything else is maki
 
 ---
 
-**Next: [Chapter 11: Session System →](./11-session-system.md)**
+Phase 1 ends here. Phase 2 topics are tracked in the root `ROADMAP.md` in the repository.

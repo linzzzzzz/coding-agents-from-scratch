@@ -117,7 +117,8 @@
 
         .editions {
             display: grid;
-            grid-template-columns: repeat(2, minmax(260px, 1fr));
+            grid-template-columns: minmax(260px, 640px);
+            justify-content: center;
             gap: 1.5rem;
             margin-top: 3rem;
         }
@@ -303,16 +304,8 @@
                 <div class="card-icon">TS</div>
                 <span class="lang-tag tag-ts">TypeScript</span>
                 <h2>TypeScript Edition</h2>
-                <p>Built with the Vercel AI SDK, Zod schemas, and React + Ink for the terminal UI. The most framework-rich approach.</p>
-                <div class="chapters">10 chapters</div>
-            </a>
-
-            <a href="python/index.html" class="card">
-                <div class="card-icon">PY</div>
-                <span class="lang-tag tag-py">Python</span>
-                <h2>Python Edition</h2>
-                <p>Uses OpenAI-compatible API patterns, dataclasses, and Rich + Prompt Toolkit for UI. The most approachable path to understanding agents.</p>
-                <div class="chapters">10 chapters</div>
+                <p>Built with the Vercel AI SDK, Zod schemas, and React + Ink for the terminal UI. Phase 1 runs from the intro through production subagents.</p>
+                <div class="chapters">Phase 1: Chapters 1-10f</div>
             </a>
         </div>
 

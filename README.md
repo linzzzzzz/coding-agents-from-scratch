@@ -1,5 +1,7 @@
 # Building Production AI Coding Agents from Scratch
 
+[简体中文](./README.zh-CN.md) | English
+
 A hands-on course for building CLI AI coding agents with tool calling, streaming, evals, context management, filesystem access, shell execution, human approval, and production-oriented safety patterns.
 
 This course starts from the clean educational architecture of a small agent, then pushes it closer to the shape of real coding agents such as OpenCode and Claude Code.
@@ -28,9 +30,8 @@ See [Changes from Upstream](./CHANGES_FROM_UPSTREAM.md) for a concise summary of
 ## Editions
 
 - **TypeScript**: Vercel AI SDK, Zod schemas, React + Ink terminal UI
-- **Python**: OpenAI-compatible SDK usage, Pydantic, Rich, Prompt Toolkit
 
-Other language experiments may return later, but the first public version focuses on the two tracks we can maintain well.
+The first public version focuses on the TypeScript Phase 1 track, from Chapter 1 through Chapter 10f. Python and later TypeScript chapters are held back until they are ready for the same level of review.
 
 ## What You'll Build
 
