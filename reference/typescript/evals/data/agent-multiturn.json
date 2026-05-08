@@ -1,0 +1,57 @@
+[
+  {
+    "data": {
+      "prompt": "List the files in the current directory, then read the contents of package.json",
+      "mockTools": {
+        "listFiles": {
+          "description": "List all files and directories in the specified directory path.",
+          "parameters": { "directory": "The directory to list" },
+          "mockReturn": "[file] package.json\n[file] tsconfig.json\n[dir] src\n[dir] node_modules"
+        },
+        "readFile": {
+          "description": "Read the contents of a file at the specified path.",
+          "parameters": { "path": "The path to the file to read" },
+          "mockReturn": "{ \"name\": \"agi\", \"version\": \"1.0.0\" }"
+        }
+      }
+    },
+    "target": {
+      "originalTask": "List files and read package.json",
+      "expectedToolOrder": ["listFiles", "readFile"],
+      "mockToolResults": {
+        "listFiles": "[file] package.json\n[file] tsconfig.json\n[dir] src\n[dir] node_modules",
+        "readFile": "{ \"name\": \"agi\", \"version\": \"1.0.0\" }"
+      },
+      "category": "task-completion"
+    },
+    "metadata": {
+      "description": "Two-step file exploration task"
+    }
+  },
+  {
+    "data": {
+      "prompt": "What is 2 + 2?",
+      "mockTools": {
+        "readFile": {
+          "description": "Read the contents of a file at the specified path.",
+          "parameters": { "path": "The path to the file to read" },
+          "mockReturn": "file contents"
+        },
+        "runCommand": {
+          "description": "Execute a shell command and return its output.",
+          "parameters": { "command": "The command to execute" },
+          "mockReturn": "command output"
+        }
+      }
+    },
+    "target": {
+      "originalTask": "Answer a simple math question without using tools",
+      "forbiddenTools": ["readFile", "runCommand"],
+      "mockToolResults": {},
+      "category": "negative"
+    },
+    "metadata": {
+      "description": "Simple question should not trigger any tool use"
+    }
+  }
+]

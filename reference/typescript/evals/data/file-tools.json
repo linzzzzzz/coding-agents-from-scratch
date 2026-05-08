@@ -1,0 +1,62 @@
+[
+  {
+    "data": {
+      "prompt": "Read the contents of README.md",
+      "tools": ["readFile", "writeFile", "listFiles", "deleteFile"]
+    },
+    "target": {
+      "expectedTools": ["readFile"],
+      "category": "golden"
+    }
+  },
+  {
+    "data": {
+      "prompt": "What files are in the src directory?",
+      "tools": ["readFile", "writeFile", "listFiles", "deleteFile"]
+    },
+    "target": {
+      "expectedTools": ["listFiles"],
+      "category": "golden"
+    }
+  },
+  {
+    "data": {
+      "prompt": "Create a new file called notes.txt with some example content",
+      "tools": ["readFile", "writeFile", "listFiles", "deleteFile"]
+    },
+    "target": {
+      "expectedTools": ["writeFile"],
+      "category": "golden"
+    }
+  },
+  {
+    "data": {
+      "prompt": "Remove the old config.bak file",
+      "tools": ["readFile", "writeFile", "listFiles", "deleteFile"]
+    },
+    "target": {
+      "expectedTools": ["deleteFile"],
+      "category": "golden"
+    }
+  },
+  {
+    "data": {
+      "prompt": "What is the capital of France?",
+      "tools": ["readFile", "writeFile", "listFiles", "deleteFile"]
+    },
+    "target": {
+      "forbiddenTools": ["readFile", "writeFile", "listFiles", "deleteFile"],
+      "category": "negative"
+    }
+  },
+  {
+    "data": {
+      "prompt": "Tell me a joke",
+      "tools": ["readFile", "writeFile", "listFiles", "deleteFile"]
+    },
+    "target": {
+      "forbiddenTools": ["readFile", "writeFile", "listFiles", "deleteFile"],
+      "category": "negative"
+    }
+  }
+]

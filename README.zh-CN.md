@@ -16,6 +16,12 @@
 
 也可以直接在 GitHub 打开 [第 1 章](./typescript-zh/src/01-intro-to-agents.md)。
 
+## 参考实现
+
+本指南对应的完整 TypeScript 代码放在 [`reference/typescript`](./reference/typescript)。
+
+你可以用它对照自己的代码、排查章节问题，或者直接在本地运行完整 agent。
+
 ## 你会构建什么
 
 一个 CLI coding agent，可以：

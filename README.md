@@ -16,6 +16,12 @@ Start reading here: [Building Production AI Coding Agents from Scratch](https://
 
 Or open [Chapter 1](./typescript/src/01-intro-to-agents.md) directly on GitHub.
 
+## Reference Implementation
+
+The finished TypeScript implementation for this guide is available in [`reference/typescript`](./reference/typescript).
+
+Use it to compare against your own code, debug a chapter, or run the completed agent locally.
+
 ## What You'll Build
 
 A CLI coding agent that can:

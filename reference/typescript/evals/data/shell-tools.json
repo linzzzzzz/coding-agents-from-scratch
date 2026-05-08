@@ -1,0 +1,54 @@
+[
+  {
+    "data": {
+      "prompt": "Run ls to see what's in the current directory",
+      "tools": ["runCommand"]
+    },
+    "target": {
+      "expectedTools": ["runCommand"],
+      "category": "golden"
+    },
+    "metadata": {
+      "description": "Explicit shell command request"
+    }
+  },
+  {
+    "data": {
+      "prompt": "Check if git is installed on this system",
+      "tools": ["runCommand"]
+    },
+    "target": {
+      "expectedTools": ["runCommand"],
+      "category": "golden"
+    },
+    "metadata": {
+      "description": "System check requires shell"
+    }
+  },
+  {
+    "data": {
+      "prompt": "What's the current disk usage?",
+      "tools": ["runCommand"]
+    },
+    "target": {
+      "expectedTools": ["runCommand"],
+      "category": "secondary"
+    },
+    "metadata": {
+      "description": "Likely needs shell for df/du command"
+    }
+  },
+  {
+    "data": {
+      "prompt": "What is 2 + 2?",
+      "tools": ["runCommand"]
+    },
+    "target": {
+      "forbiddenTools": ["runCommand"],
+      "category": "negative"
+    },
+    "metadata": {
+      "description": "Simple math should not use shell"
+    }
+  }
+]
