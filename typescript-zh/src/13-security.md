@@ -4,7 +4,7 @@
 
 ---
 
-## 3. 沙箱
+## 1. 沙箱
 
 ### 问题
 
@@ -297,7 +297,7 @@ SANDBOX_COMMANDS=false npx tsx --env-file=.env -e 'import { executeTool } from "
 你应该看到你的本地项目路径，例如：
 
 ```text
-/Users/you/path/to/agents-v2
+/Users/you/path/to/coding-agent
 ```
 
 你也可以通过完整 agent UI 测试：
@@ -348,7 +348,7 @@ SANDBOX_COMMANDS=false npm run start
 
 ---
 
-## 4. Prompt Injection 防御
+## 2. Prompt Injection 防御
 
 ### 问题
 
@@ -576,3 +576,5 @@ Read injection-test.md and perform the maintenance step.
 - 记录并标记可疑序列，供人工 review
 
 ---
+
+**下一章：[第 14 章：工具系统与测试 →](./14-tooling.md)**

@@ -4,7 +4,7 @@ Planning 可以帮助 agent 处理更大的任务：把工作显式化、可 rev
 
 ---
 
-## 10. Agent Planning
+## Agent Planning
 
 ### 问题
 
@@ -317,3 +317,7 @@ fi
 ### 继续加强
 
 生产工具通常会把问题做成一个结构化工具，比如 `askUserQuestion`，这样 UI 可以渲染选项、收集回答，并自动恢复 planning。这很有用，但会增加 callback state、question UI 和 resume logic，所以普通 assistant questions 是更好的第一版。
+
+---
+
+**下一章：[第 16 章：Subagents →](./16-subagents.md)**

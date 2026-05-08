@@ -4,7 +4,7 @@
 
 ---
 
-## 6. 工具结果大小限制
+## 1. 工具结果大小限制
 
 ### 问题
 
@@ -126,7 +126,7 @@ node --import tsx/esm -e 'const { executeTool } = await import("./src/agent/exec
 
 ---
 
-## 7. 并行工具执行
+## 2. 并行工具执行
 
 ### 问题
 
@@ -323,7 +323,7 @@ tool_result readFile parallel-b.md
 
 ---
 
-## 12. 真实工具测试
+## 3. 真实工具测试
 
 ### 问题
 
@@ -401,3 +401,5 @@ npm test
 ```
 
 ---
+
+**下一章：[第 15 章：Agent Planning →](./15-agent-planning.md)**

@@ -4,7 +4,7 @@
 
 ---
 
-## 2. 持久化记忆
+## 持久化记忆
 
 ### 问题
 
@@ -398,3 +398,5 @@ If you show a code example, which language should you choose?
 - 区分 project-level memory 和 user-level memory
 
 ---
+
+**下一章：[第 13 章：安全 →](./13-security.md)**

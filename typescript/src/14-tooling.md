@@ -4,7 +4,7 @@ Production agents need tool output limits, safe parallelism, and real integratio
 
 ---
 
-## 6. Tool Result Size Limits
+## 1. Tool Result Size Limits
 
 ### The Problem
 
@@ -127,7 +127,7 @@ This confirms the file tool is slicing results with `limit` and `offset`. To tes
 ---
 
 ---
-## 7. Parallel Tool Execution
+## 2. Parallel Tool Execution
 
 ### The Problem
 
@@ -325,7 +325,7 @@ That ordering is the useful signal. It means the runtime started the safe reads 
 ---
 
 ---
-## 12. Real Tool Testing
+## 3. Real Tool Testing
 
 ### The Problem
 
@@ -406,3 +406,5 @@ npm test
 ```
 
 ---
+
+**Next: [Chapter 15: Agent Planning →](./15-agent-planning.md)**

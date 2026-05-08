@@ -121,7 +121,7 @@
 完成后，你的项目结构会像这样：
 
 ```
-agents-v2/
+coding-agent/
 ├── src/
 │   ├── agent/
 │   │   ├── run.ts              # Core agent loop

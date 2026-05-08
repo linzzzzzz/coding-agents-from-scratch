@@ -4,7 +4,7 @@ Sandboxing and prompt-injection defenses reduce the blast radius of tool executi
 
 ---
 
-## 3. Sandboxing
+## 1. Sandboxing
 
 ### The Problem
 
@@ -297,7 +297,7 @@ SANDBOX_COMMANDS=false npx tsx --env-file=.env -e 'import { executeTool } from "
 You should see your local project path, for example:
 
 ```text
-/Users/you/path/to/agents-v2
+/Users/you/path/to/coding-agent
 ```
 
 You can also test through the full agent UI:
@@ -349,7 +349,7 @@ Now the same shell commands run directly on your machine.
 ---
 
 ---
-## 4. Prompt Injection Defense
+## 2. Prompt Injection Defense
 
 ### The Problem
 
@@ -577,3 +577,5 @@ In the logs, either no `runCommand` tool call appears, or `runCommand` appears w
 - Log and flag suspicious sequences for human review
 
 ---
+
+**Next: [Chapter 14: Tooling and Tests →](./14-tooling.md)**

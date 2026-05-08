@@ -121,7 +121,7 @@ Code blocks show exactly what to type. When we modify an existing file, we'll sh
 By the end, your project will look like this:
 
 ```
-agents-v2/
+coding-agent/
 ├── src/
 │   ├── agent/
 │   │   ├── run.ts              # Core agent loop

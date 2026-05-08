@@ -49,9 +49,11 @@ Agent:
 
 ### 初始化项目
 
+本书统一使用 `coding-agent` 作为项目名。你也可以换成更适合自己项目的任何名字。
+
 ```bash
-mkdir agents-v2
-cd agents-v2
+mkdir coding-agent
+cd coding-agent
 npm init -y
 ```
 

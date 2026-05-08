@@ -70,7 +70,7 @@ const result = await withRetry(async () =>
 
 ---
 
-## 5. 限流与成本控制
+## 2. 限流与成本控制
 
 ### 问题
 
@@ -291,8 +291,6 @@ export async function runAgent(
 先在不调用 LLM 的情况下测试 tracker 本身：
 
 ```bash
-cd /Users/flln/Desktop/dev/agents-v2
-
 npx tsx --eval '
 import { UsageTracker } from "./src/agent/usage.ts";
 
@@ -403,7 +401,7 @@ hi again
 
 ---
 
-## 8. 取消
+## 3. 取消
 
 ### 问题
 
@@ -584,7 +582,7 @@ help me draft something 50 words
 
 ---
 
-## 9. 结构化日志
+## 4. 结构化日志
 
 ### 问题
 
@@ -841,3 +839,5 @@ tail -n 20 .agent/logs/agent.jsonl
 这个版本会记录 metadata、长度、工具名和工具参数。在真实产品里，要小心原始工具参数，因为它们可能包含文件路径、密钥或用户内容。更强的生产 logger 应该在写入前对敏感字段做 redaction。
 
 ---
+
+**下一章：[第 12 章：记忆 →](./12-memory.md)**

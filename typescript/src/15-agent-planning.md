@@ -4,7 +4,7 @@ Planning helps the agent handle larger tasks by making work explicit, reviewable
 
 ---
 
-## 10. Agent Planning
+## Agent Planning
 
 ### The Problem
 
@@ -340,3 +340,7 @@ Production tools often make questions a structured tool, such as
 `askUserQuestion`, so the UI can render choices, collect answers, and resume
 planning automatically. That is useful, but it adds callback state, question UI,
 and resume logic, so ordinary assistant questions are a better first version.
+
+---
+
+**Next: [Chapter 16: Subagents →](./16-subagents.md)**

@@ -70,7 +70,7 @@ Keep using the model-facing `modelTools` from Chapter 4 here. Retries should rep
 
 ---
 
-## 5. Rate Limiting & Cost Controls
+## 2. Rate Limiting & Cost Controls
 
 ### The Problem
 
@@ -291,8 +291,6 @@ The important thing is that every tracked counter must be updated where the even
 First test the tracker itself without calling an LLM:
 
 ```bash
-cd /Users/flln/Desktop/dev/agents-v2
-
 npx tsx --eval '
 import { UsageTracker } from "./src/agent/usage.ts";
 
@@ -403,7 +401,7 @@ After testing, restore the normal limits.
 
 ---
 
-## 8. Cancellation
+## 3. Cancellation
 
 ### The Problem
 
@@ -584,7 +582,7 @@ Those are production hardening steps. The minimal version above is enough to dis
 
 ---
 
-## 9. Structured Logging
+## 4. Structured Logging
 
 ### The Problem
 
@@ -841,3 +839,5 @@ You should see events like:
 This version logs metadata, lengths, tool names, and tool arguments. In a real product, be careful with raw tool arguments because they may contain file paths, secrets, or user content. A stronger production logger would redact sensitive fields before writing them.
 
 ---
+
+**Next: [Chapter 12: Memory →](./12-memory.md)**

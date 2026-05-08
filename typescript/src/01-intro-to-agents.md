@@ -49,9 +49,11 @@ Let's start from zero.
 
 ### Initialize the Project
 
+We'll use `coding-agent` as the project name throughout this book. Feel free to use whatever name fits your project.
+
 ```bash
-mkdir agents-v2
-cd agents-v2
+mkdir coding-agent
+cd coding-agent
 npm init -y
 ```
 

@@ -4,7 +4,7 @@ Conversation memory and semantic memory let the agent carry useful context acros
 
 ---
 
-## 2. Persistent Memory
+## Persistent Memory
 
 ### The Problem
 
@@ -398,3 +398,5 @@ This is intentionally simple. Real semantic memory usually adds deduplication, u
 - Separate project-level memory from user-level memory
 
 ---
+
+**Next: [Chapter 13: Security →](./13-security.md)**
