@@ -1,20 +1,25 @@
 <p align="center">
-  <img src="./assets/banner-zero-to-prod-light-notext-slim.jpg" alt="终端提示进入 agent 循环并完成生产检查" width="100%">
+  <img src="./assets/banner-zero-to-prod-light-notext-slim.jpg" alt="从零构建生产级 AI Coding Agent — 指南封面" width="100%">
 </p>
 
 # 从零构建生产级 AI Coding Agent
 
 [English](./README.md) | 简体中文
 
-一份动手指南，带你从零实现一个 CLI AI coding agent，覆盖工具调用、流式输出、评测、上下文管理、文件系统访问、Shell 执行、人工审批，以及面向生产环境的安全与可靠性模式。
+一份动手指南，带你从零实现一个 CLI AI coding agent —— 覆盖工具调用、流式输出、评测、文件与 Shell 工具、上下文与记忆管理、人工审批、可靠性与安全，以及 planning mode、subagents 等生产级架构模式。
 
 这份指南从一个小而清晰的教学版 agent 架构开始，然后逐步靠近 OpenCode 和 Claude Code 这类真实 coding agent 的形态。
 
+## 适合谁
+
+- 想自己动手实现一个 coding agent、看懂每一层而不只是调 SDK 的工程师
+- 准备 fork 或扩展生产级 agent（Claude Code、OpenCode）的团队，需要先建立能读懂源码的心智模型
+- 已经会"调用 LLM"，但想补齐那些不性感却必须的生产细节：retries、cancellation、路径校验、评测和集成测试
+
 ## 快速开始
 
-从这里开始阅读：[从零构建生产级 AI Coding Agent](https://linzzzzzz.github.io/coding-agents-from-scratch/)。
-
-也可以直接在 GitHub 打开 [第 1 章](./typescript-zh/src/01-intro-to-agents.md)。
+- 在线阅读：[从零构建生产级 AI Coding Agent](https://linzzzzzz.github.io/coding-agents-from-scratch/)
+- 或直接在 GitHub 打开 [第 1 章](./typescript-zh/src/01-intro-to-agents.md)
 
 ## 参考实现
 
@@ -24,20 +29,15 @@
 
 ## 你会构建什么
 
-一个 CLI coding agent，可以：
+一个 CLI coding agent，它能够：
 
-- 使用 OpenAI-compatible LLM API 和结构化工具定义
-- 流式输出回复，并在 agent loop 中执行工具
-- 读取、写入、列出和删除文件
-- 执行 Shell 命令和代码
-- 搜索网页获取最新信息
-- 通过 token 估算和压缩管理上下文窗口
-- 在危险操作前请求人工审批
-- 运行单轮和多轮评测
-- 加入 retries、cancellation、usage limits 和 structured logging 等可靠性能力
-- 持久化有用记忆，同时避免把每次运行都变成永久上下文
-- 通过路径校验、工具结果隔离、输出限制和真实集成测试强化工具执行
-- 加入 planning mode 和生产级 subagents，用来处理更大的 coding task
+- 在流式 agent loop 中通过结构化工具调用读写代码、执行 Shell 命令、搜索网页
+- 通过上下文压缩和跨运行的持久化记忆，控制 token 预算
+- 在执行破坏性操作前请求人工审批，并用路径校验和输出限制为每个工具兜底
+- 通过 retries、cancellation、usage limits 和结构化日志在真实故障下保持可用
+- 在执行复杂任务前先规划，并把子任务委派给专门的 subagents
+- 内置单轮、多轮评测，以及面向真实工具的集成测试
+- 兼容任意 OpenAI-compatible provider，不绑定单一厂商
 
 ## 指南目录
 
@@ -77,19 +77,18 @@
 - [OpenCode](https://opencode.ai/)
 - [Claude Code](https://code.claude.com/docs/en/overview)
 
-目标不是复制这些项目，而是用动手指南的方式讲清楚实用 coding agent 背后的架构，并补充更多生产环境相关主题、OpenAI-compatible provider 支持、更清晰的说明、问题修复和新的网页体验。
+目标不是复制这些项目，而是用动手指南的方式拆解实用 coding agent 是怎么搭起来的。
 
 ## 本指南的特点
 
-- 把教学版 agent 架构扩展到更接近 OpenCode 和 Claude Code 这类生产级 coding agent 的方向
-- 支持 OpenAI-compatible provider，而不是假设只使用单一模型厂商
-- 增加更清晰的设置说明、细节解释，并修复学习过程中发现的小问题
-- 加深上下文管理、工具安全、Shell 执行、人工审批、评测和生产准备相关内容
-- 更新网站和指南定位，让项目在保留致谢的同时拥有自己的表达
+- 新增 planning mode、subagents、安全加固、记忆等章节
+- 兼容任意 OpenAI-compatible provider，不绑定单一模型厂商
+- 双语 mdBook 网站，支持 English / 简体中文 逐页切换
+- 在学习过程中沉淀的设置说明完善与问题修复
 
 主要差异可以查看 [Changes from Upstream](./CHANGES_FROM_UPSTREAM.md)。
 
-## 本地开发
+## 本地构建网站
 
 需要安装 [mdBook](https://rust-lang.github.io/mdBook/)。在 macOS 上可以用 Homebrew 安装：
 

@@ -1,20 +1,25 @@
 <p align="center">
-  <img src="./assets/banner-zero-to-prod-light-notext-slim.jpg" alt="Terminal prompt flowing into an agent loop and production check" width="100%">
+  <img src="./assets/banner-zero-to-prod-light-notext-slim.jpg" alt="Building Production AI Coding Agents — course banner" width="100%">
 </p>
 
 # Building Production AI Coding Agents from Scratch
 
 [简体中文](./README.zh-CN.md) | English
 
-A hands-on course for building CLI AI coding agents with tool calling, streaming, evals, context management, filesystem access, shell execution, human approval, and production-oriented safety patterns.
+A hands-on course for building CLI AI coding agents — tool calling, streaming, evals, file and shell tools, context and memory management, human approval, reliability and security, and production architecture patterns like planning mode and subagents.
 
 This course starts from the clean educational architecture of a small agent, then pushes it closer to the shape of real coding agents such as OpenCode and Claude Code.
 
+## Who This Is For
+
+- Engineers who want to build a coding agent themselves and understand every layer — not just call an SDK
+- Teams forking or extending production agents (Claude Code, OpenCode) who need the mental model to read the source
+- Builders past "hello world LLM calls" who want the unglamorous production parts: retries, cancellation, path validation, evals, and integration tests
+
 ## Quick Start
 
-Start reading here: [Building Production AI Coding Agents from Scratch](https://linzzzzzz.github.io/coding-agents-from-scratch/).
-
-Or open [Chapter 1](./typescript/src/01-intro-to-agents.md) directly on GitHub.
+- Read online: [Building Production AI Coding Agents from Scratch](https://linzzzzzz.github.io/coding-agents-from-scratch/)
+- Or jump straight to [Chapter 1](./typescript/src/01-intro-to-agents.md) on GitHub
 
 ## Reference Implementation
 
@@ -24,20 +29,15 @@ Use it to compare against your own code, debug a chapter, or run the completed a
 
 ## What You'll Build
 
-A CLI coding agent that can:
+A CLI coding agent that:
 
-- Call OpenAI-compatible LLM APIs with structured tool definitions
-- Stream responses and execute tools inside an agent loop
-- Read, write, list, and delete files
-- Run shell commands and execute code
-- Search the web for current information
-- Manage context windows with token estimation and compaction
-- Ask for human approval before dangerous operations
-- Run single-turn and multi-turn evaluations
-- Add reliability features like retries, cancellation, usage limits, and structured logging
-- Persist useful memories without turning every run into permanent context
-- Harden tool execution with path validation, result wrapping, output limits, and real integration tests
-- Add planning mode and production-style subagents for larger coding tasks
+- Reads code, edits files, runs shell commands, and searches the web — through structured tool calls inside a streaming agent loop
+- Stays within token budgets via context compaction and persistent memory across runs
+- Asks for human approval before destructive operations, with path validation and output limits guarding every tool
+- Survives real failures with retries, cancellation, usage limits, and structured logs
+- Plans complex tasks before acting and delegates subtasks to specialized subagents
+- Ships with single-turn and multi-turn evals plus integration tests against real tools
+- Works with any OpenAI-compatible provider — not locked to a single vendor
 
 ## Table of Contents
 
@@ -77,19 +77,18 @@ This project is inspired by:
 - [OpenCode](https://opencode.ai/)
 - [Claude Code](https://code.claude.com/docs/en/overview)
 
-The goal is not to clone those projects. The goal is to teach the architecture behind practical coding agents, then extend the learning path with more production concerns, provider flexibility, clearer instructions, bug fixes, and a revamped web experience.
+The goal is not to clone those projects but to show how practical coding agents are built.
 
 ## What This Version Adds
 
-- Expands the original agent architecture with topics closer to production coding agents like OpenCode and Claude Code
-- Supports OpenAI-compatible providers instead of assuming a single model vendor
-- Adds clearer setup notes, more detailed explanations, and fixes for minor issues found while working through the material
-- Deepens coverage of context management, tool safety, shell execution, human approval, evaluation, and production readiness
-- Refreshes the website and course positioning so the project stands on its own while preserving attribution
+- Adds new chapters on planning mode, subagents, security hardening, and memory
+- Supports any OpenAI-compatible provider instead of assuming a single model vendor
+- Bilingual mdBook site with per-page English / 简体中文 switching
+- Setup clarifications and bug fixes found while working through the material
 
 See [Changes from Upstream](./CHANGES_FROM_UPSTREAM.md) for a concise summary of the major differences.
 
-## Local Development
+## Building the Site Locally
 
 Requires [mdBook](https://rust-lang.github.io/mdBook/). On macOS, install it with Homebrew:
 
