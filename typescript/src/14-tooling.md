@@ -1,4 +1,4 @@
-# Chapter 14: Tooling
+# Chapter 14: Tooling and Tests
 
 Production agents need tool output limits, safe parallelism, and real integration tests so tool behavior stays reliable beyond mocked evals.
 

@@ -362,4 +362,4 @@ The agent can now read, write, list, and delete files. But these write and delet
 
 ---
 
-**Next: [Chapter 7: Web Search & Context Management →](./07-web-search-context-management.md)**
+**Next: [Chapter 7: Web Search and Context Management →](./07-web-search-context-management.md)**

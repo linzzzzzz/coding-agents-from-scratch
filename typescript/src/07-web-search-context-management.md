@@ -1,4 +1,4 @@
-# Chapter 7: Web Search & Context Management
+# Chapter 7: Web Search and Context Management
 
 ## Two Problems, One Chapter
 
@@ -714,4 +714,4 @@ The agent can now search the web and handle arbitrarily long conversations. In t
 
 ---
 
-**Next: [Chapter 8: Shell Tool →](./08-shell-tool.md)**
+**Next: [Chapter 8: Shell Tool and Code Execution →](./08-shell-tool.md)**

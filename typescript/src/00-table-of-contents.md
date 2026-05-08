@@ -4,7 +4,7 @@ A hands-on guide to building a practical CLI coding agent with tool calling, eva
 
 > Inspired by [sivakarasala/building-ai-agents](https://github.com/sivakarasala/building-ai-agents), [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2), [OpenCode](https://opencode.ai/), and [Claude Code](https://code.claude.com/docs/en/overview). This version expands the learning path toward production coding-agent behavior, OpenAI-compatible providers, clearer instructions, bug fixes, and a revamped web experience.
 
-> 💻 **Upstream reference repo:** [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2). This course expands from that foundation with provider-flexible configuration, additional production notes, clearer instructions, and fixes discovered while working through the material.
+> 💻 **Reference implementation:** the finished TypeScript code is available in [`reference/typescript`](../../reference/typescript). Use it to compare against your own code, debug chapters, or run the completed agent locally.
 
 ---
 
@@ -70,10 +70,10 @@ Test full agent conversations with mocked tools. Use LLM-as-judge to score outpu
 ### [Chapter 6: File System Tools](./06-file-system-tools.md)
 Add real filesystem tools — read, write, list, and delete files. Handle errors gracefully and give your agent the ability to work with your codebase.
 
-### [Chapter 7: Web Search & Context Management](./07-web-search-context-management.md)
+### [Chapter 7: Web Search and Context Management](./07-web-search-context-management.md)
 Add web search capabilities. Implement token estimation, context window tracking, and automatic conversation compaction to handle long conversations.
 
-### [Chapter 8: Shell Tool](./08-shell-tool.md)
+### [Chapter 8: Shell Tool and Code Execution](./08-shell-tool.md)
 Give your agent the power to run shell commands. Add a code execution tool that writes to temp files and runs them. Understand the security implications.
 
 ### [Chapter 9: Human-in-the-Loop](./09-human-in-the-loop.md)
@@ -93,7 +93,7 @@ Persist useful conversation and semantic memory without turning every run into a
 ### [Chapter 13: Security](./13-security.md)
 Scope filesystem access, sandbox shell execution, and defend against prompt injection from tool results.
 
-### [Chapter 14: Tooling](./14-tooling.md)
+### [Chapter 14: Tooling and Tests](./14-tooling.md)
 Keep tool results bounded, run safe tools in parallel, and test real integrations. Includes a [tool orchestration reference](./14a-tool-orchestration-reference.md).
 
 ## Part IV: Agent Architecture
@@ -104,11 +104,11 @@ Add plan/build mode, approval flow, and read-only planning enforcement for more 
 ### [Chapter 16: Subagents](./16-subagents.md)
 Delegate bounded work to specialized agents, closer to OpenCode and Claude Code's architecture.
 
-## Phase 2
+## What's Next
 
-Phase 1 ends at Chapter 16. Draft chapters for sessions, diff-based editing, permission rules, advanced shell execution, MCP/plugins, provider profiles, context engines, production UI, advanced subagents, and fixture-based evals are held back for Phase 2.
+This track ends at Chapter 16. Draft chapters for sessions, diff-based editing, permission rules, advanced shell execution, MCP/plugins, provider profiles, context engines, production UI, advanced subagents, and fixture-based evals are held back for a future track.
 
-See the root `ROADMAP.md` in the repository for the planned next track.
+See the [Roadmap section of the README](../../README.md#roadmap) for what's planned next.
 
 ---
 

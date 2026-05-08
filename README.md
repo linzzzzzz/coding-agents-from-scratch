@@ -43,20 +43,20 @@ A CLI coding agent that:
 
 | Part | Chapter |
 | --- | --- |
-| **I. Agent Basics** | [Chapter 1: Introduction to AI Agents](./typescript/src/01-intro-to-agents.md) |
-|  | [Chapter 2: Tool Calling with Structured Schemas](./typescript/src/02-tool-calling.md) |
+| **I. Agent Foundations** | [Chapter 1: Introduction to AI Agents](./typescript/src/01-intro-to-agents.md) |
+|  | [Chapter 2: Tool Calling](./typescript/src/02-tool-calling.md) |
 |  | [Chapter 3: Single-Turn Evaluations](./typescript/src/03-single-turn-evals.md) |
-|  | [Chapter 4: Streaming Agent Loop](./typescript/src/04-the-agent-loop.md) |
+|  | [Chapter 4: The Agent Loop](./typescript/src/04-the-agent-loop.md) |
 |  | [Chapter 5: Multi-Turn Evaluations](./typescript/src/05-multi-turn-evals.md) |
 | **II. Real-World Capabilities** | [Chapter 6: File System Tools](./typescript/src/06-file-system-tools.md) |
 |  | [Chapter 7: Web Search and Context Management](./typescript/src/07-web-search-context-management.md) |
-|  | [Chapter 8: Shell Tools and Code Execution](./typescript/src/08-shell-tool.md) |
-|  | [Chapter 9: Human Approval Workflow](./typescript/src/09-human-in-the-loop.md) |
+|  | [Chapter 8: Shell Tool and Code Execution](./typescript/src/08-shell-tool.md) |
+|  | [Chapter 9: Human-in-the-Loop](./typescript/src/09-human-in-the-loop.md) |
 | **III. Hardening the Agent** | [Chapter 10: From Prototype to Product](./typescript/src/10-from-prototype-to-product.md) |
-|  | [Chapter 11: Reliability and Structured Logging](./typescript/src/11-reliability.md) |
+|  | [Chapter 11: Reliability](./typescript/src/11-reliability.md) |
 |  | [Chapter 12: Memory](./typescript/src/12-memory.md) |
-|  | [Chapter 13: Security Hardening](./typescript/src/13-security.md) |
-|  | [Chapter 14: Tooling, Orchestration, and Real Tests](./typescript/src/14-tooling.md) |
+|  | [Chapter 13: Security](./typescript/src/13-security.md) |
+|  | [Chapter 14: Tooling and Tests](./typescript/src/14-tooling.md) |
 | **IV. Agent Architecture** | [Chapter 15: Agent Planning](./typescript/src/15-agent-planning.md) |
 |  | [Chapter 16: Subagents](./typescript/src/16-subagents.md) |
 

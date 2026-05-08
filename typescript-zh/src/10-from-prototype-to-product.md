@@ -10,12 +10,12 @@
 
 ## 下一组问题
 
-Phase 1 的剩余部分会拆成几个聚焦章节。你可以从最符合当前风险的领域开始：
+本系列剩余部分会拆成几个聚焦章节。你可以从最符合当前风险的领域开始：
 
 - **[可靠性](./11-reliability.md)**：重试、限流、取消和结构化日志。
 - **[记忆](./12-memory.md)**：对话记忆、语义记忆和实用的记忆测试。
 - **[安全](./13-security.md)**：命令沙箱、目录范围限制和 prompt injection 防御。
-- **[工具系统](./14-tooling.md)**：工具结果大小限制、并行执行和真实工具集成测试。OpenCode 和 Claude Code 的模式可以参考 [工具编排参考](./14a-tool-orchestration-reference.md)。
+- **[工具系统与测试](./14-tooling.md)**：工具结果大小限制、并行执行和真实工具集成测试。OpenCode 和 Claude Code 的模式可以参考 [工具编排参考](./14a-tool-orchestration-reference.md)。
 - **[Agent Planning](./15-agent-planning.md)**：plan/build 模式、审批流程和只读 planning 约束。
 - **[Subagents](./16-subagents.md)**：把边界清晰的工作委派给专门的 agent，更接近 OpenCode 和 Claude Code 的生产级模式。
 
@@ -119,4 +119,4 @@ Phase 1 的剩余部分会拆成几个聚焦章节。你可以从最符合当前
 
 ---
 
-继续读到第 16 章即可完成 Phase 1。Phase 2 主题记录在仓库根目录的 `ROADMAP.md` 中。
+继续读到第 16 章即可完成本系列。后续主题记录在 [README 的 Roadmap 部分](../../README.zh-CN.md#roadmap)。

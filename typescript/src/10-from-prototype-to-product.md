@@ -10,12 +10,12 @@ This chapter covers what's missing and how to close each gap. We won't implement
 
 ## The Next Set of Problems
 
-The rest of Phase 1 is split into focused chapters. Start with the area that matches the risk you are trying to reduce:
+The rest of this track is split into focused chapters. Start with the area that matches the risk you are trying to reduce:
 
 - **[Reliability](./11-reliability.md)** — retries, rate limiting, cancellation, and structured logging.
 - **[Memory](./12-memory.md)** — conversation memory, semantic memory, and practical memory tests.
 - **[Security](./13-security.md)** — command sandboxing, directory scoping, and prompt-injection defenses.
-- **[Tooling](./14-tooling.md)** — tool result size limits, parallel execution, and real tool integration tests. See also the [tool orchestration reference](./14a-tool-orchestration-reference.md) for OpenCode and Claude Code patterns.
+- **[Tooling and Tests](./14-tooling.md)** — tool result size limits, parallel execution, and real tool integration tests. See also the [tool orchestration reference](./14a-tool-orchestration-reference.md) for OpenCode and Claude Code patterns.
 - **[Agent Planning](./15-agent-planning.md)** — plan/build mode, approval flow, and read-only planning enforcement.
 - **[Subagents](./16-subagents.md)** — delegating bounded work to specialized agents, closer to OpenCode and Claude Code's production pattern.
 
@@ -116,4 +116,4 @@ The agent loop you built in Chapter 4 is the foundation. Everything else is maki
 
 ---
 
-Continue through Chapter 16 to complete Phase 1. Phase 2 topics are tracked in the root `ROADMAP.md` in the repository.
+Continue through Chapter 16 to complete the track. Future topics are tracked in the [Roadmap section of the README](../../README.md#roadmap).

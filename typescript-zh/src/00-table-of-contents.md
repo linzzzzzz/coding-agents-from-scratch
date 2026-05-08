@@ -4,7 +4,7 @@
 
 > 灵感来自 [sivakarasala/building-ai-agents](https://github.com/sivakarasala/building-ai-agents)、[Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2)、[OpenCode](https://opencode.ai/) 和 [Claude Code](https://code.claude.com/docs/en/overview)。这个版本把学习路径扩展到更接近生产级 coding agent 的方向，并加入 OpenAI-compatible provider、更清晰的说明、问题修复和新的网页体验。
 
-> 💻 **上游参考 repo：** [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2)。本指南基于这个基础继续扩展，加入 provider-flexible 配置、更多生产化说明、更清晰的步骤，以及学习过程中发现的修复。
+> 💻 **参考实现：** 完整 TypeScript 代码见 [`reference/typescript`](../../reference/typescript)。你可以用它对照自己的代码、排查章节问题，或者直接在本地运行完整 agent。
 
 ---
 
@@ -73,7 +73,7 @@
 ### [第 7 章：网页搜索与上下文管理](./07-web-search-context-management.md)
 加入网页搜索能力。实现 token 估算、上下文窗口追踪和自动对话压缩，用来处理长对话。
 
-### [第 8 章：Shell 工具](./08-shell-tool.md)
+### [第 8 章：Shell 工具与代码执行](./08-shell-tool.md)
 让 agent 能够运行 shell 命令。添加一个 code execution 工具，将代码写入临时文件并执行。理解其中的安全影响。
 
 ### [第 9 章：Human-in-the-Loop](./09-human-in-the-loop.md)
@@ -93,7 +93,7 @@
 ### [第 13 章：安全](./13-security.md)
 限制文件系统访问范围，沙箱化 shell 执行，并防御来自工具结果的 prompt injection。
 
-### [第 14 章：工具系统](./14-tooling.md)
+### [第 14 章：工具系统与测试](./14-tooling.md)
 限制工具结果大小，并行运行安全工具，并测试真实集成。包含一个 [tool orchestration reference](./14a-tool-orchestration-reference.md)。
 
 ## Part IV：Agent 架构
@@ -104,11 +104,11 @@
 ### [第 16 章：Subagents](./16-subagents.md)
 把边界清晰的任务委派给专门的 subagent，更接近 OpenCode 和 Claude Code 的架构。
 
-## Phase 2
+## 后续计划
 
-Phase 1 到第 16 章结束。关于 sessions、diff-based editing、permission rules、advanced shell execution、MCP/plugins、provider profiles、context engines、production UI、advanced subagents 和 fixture-based evals 的草稿章节，会先保留到 Phase 2。
+本系列在第 16 章结束。关于 sessions、diff-based editing、permission rules、advanced shell execution、MCP/plugins、provider profiles、context engines、production UI、advanced subagents 和 fixture-based evals 的草稿章节，会保留到后续系列。
 
-计划中的下一阶段请查看 repo 根目录的 `ROADMAP.md`。
+计划中的下一阶段请查看 [README 中的 Roadmap 部分](../../README.zh-CN.md#roadmap)。
 
 ---
 

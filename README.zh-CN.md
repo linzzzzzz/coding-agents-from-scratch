@@ -44,19 +44,19 @@
 | 部分 | 章节 |
 | --- | --- |
 | **I. Agent 基础** | [第 1 章：AI Agent 入门](./typescript-zh/src/01-intro-to-agents.md) |
-|  | [第 2 章：结构化工具调用](./typescript-zh/src/02-tool-calling.md) |
+|  | [第 2 章：工具调用](./typescript-zh/src/02-tool-calling.md) |
 |  | [第 3 章：单轮评测](./typescript-zh/src/03-single-turn-evals.md) |
-|  | [第 4 章：流式 agent loop](./typescript-zh/src/04-the-agent-loop.md) |
+|  | [第 4 章：Agent Loop](./typescript-zh/src/04-the-agent-loop.md) |
 |  | [第 5 章：多轮评测](./typescript-zh/src/05-multi-turn-evals.md) |
 | **II. 真实世界能力** | [第 6 章：文件系统工具](./typescript-zh/src/06-file-system-tools.md) |
 |  | [第 7 章：网页搜索与上下文管理](./typescript-zh/src/07-web-search-context-management.md) |
 |  | [第 8 章：Shell 工具与代码执行](./typescript-zh/src/08-shell-tool.md) |
-|  | [第 9 章：人工审批流程](./typescript-zh/src/09-human-in-the-loop.md) |
+|  | [第 9 章：Human-in-the-Loop](./typescript-zh/src/09-human-in-the-loop.md) |
 | **III. 强化 Agent** | [第 10 章：从原型到产品](./typescript-zh/src/10-from-prototype-to-product.md) |
-|  | [第 11 章：可靠性与结构化日志](./typescript-zh/src/11-reliability.md) |
+|  | [第 11 章：可靠性](./typescript-zh/src/11-reliability.md) |
 |  | [第 12 章：记忆](./typescript-zh/src/12-memory.md) |
-|  | [第 13 章：安全强化](./typescript-zh/src/13-security.md) |
-|  | [第 14 章：工具系统、编排与真实测试](./typescript-zh/src/14-tooling.md) |
+|  | [第 13 章：安全](./typescript-zh/src/13-security.md) |
+|  | [第 14 章：工具系统与测试](./typescript-zh/src/14-tooling.md) |
 | **IV. Agent 架构** | [第 15 章：Agent Planning](./typescript-zh/src/15-agent-planning.md) |
 |  | [第 16 章：Subagents](./typescript-zh/src/16-subagents.md) |
 

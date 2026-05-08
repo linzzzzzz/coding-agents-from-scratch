@@ -25,7 +25,7 @@
 - [可靠性](./11-reliability.md)
 - [记忆](./12-memory.md)
 - [安全](./13-security.md)
-- [工具系统](./14-tooling.md)
+- [工具系统与测试](./14-tooling.md)
   - [工具编排参考](./14a-tool-orchestration-reference.md)
 
 # Part IV：Agent 架构

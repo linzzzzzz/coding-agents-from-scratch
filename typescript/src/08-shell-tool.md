@@ -1,4 +1,4 @@
-# Chapter 8: Shell Tool
+# Chapter 8: Shell Tool and Code Execution
 
 ## The Most Powerful (and Dangerous) Tool
 
