@@ -1,7 +1,5 @@
 # 第 4 章：Agent Loop
 
-> 💻 **代码：** 从 [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2) 的 [`lesson-04`](https://github.com/Hendrixer/agents-v2/tree/lesson-04) 分支开始。该分支里的 `notes/` 文件夹包含本章会写到的代码。
-
 ## Agent 的心脏
 
 这是本书最重要的一章。前面的内容都是铺垫，后面的内容都会建立在这里之上。

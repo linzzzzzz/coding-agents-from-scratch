@@ -1,7 +1,5 @@
 # Chapter 2: Tool Calling
 
-> 💻 **Code:** start from the [`lesson-02`](https://github.com/Hendrixer/agents-v2/tree/lesson-02) branch of [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2). The `notes/` folder on that branch has the code you'll write in this chapter.
-
 ## How Tool Calling Works
 
 Tool calling is the mechanism that turns a language model into an agent. Here's the flow:

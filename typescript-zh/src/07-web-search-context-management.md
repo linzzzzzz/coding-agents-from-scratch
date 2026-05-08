@@ -1,7 +1,5 @@
 # 第 7 章：网页搜索与上下文管理
 
-> 💻 **代码：** 从 [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2) 的 [`lesson-07`](https://github.com/Hendrixer/agents-v2/tree/lesson-07) 分支开始。该分支里的 `notes/` 文件夹包含本章会写到的代码。
-
 ## 两个问题，一章解决
 
 这一章处理两个相关问题：

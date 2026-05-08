@@ -1,7 +1,5 @@
 # 第 9 章：Human-in-the-Loop
 
-> 💻 **代码：** 从 [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2) 的 [`lesson-09`](https://github.com/Hendrixer/agents-v2/tree/lesson-09) 分支开始。该分支里的 `notes/` 目录包含本章要编写的代码。完成后的应用在 [`done`](https://github.com/Hendrixer/agents-v2/tree/done) 分支。
-
 ## 安全层
 
 我们已经构建了一个拥有七个工具的 agent。其中四个工具可以修改你的系统：writeFile、deleteFile、runCommand 和 executeCode。现在，agent 会自动批准所有事情：如果 LLM 请求 `deleteFile`，循环会直接执行，不会询问用户。

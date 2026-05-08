@@ -1,7 +1,5 @@
 # Chapter 7: Web Search & Context Management
 
-> 💻 **Code:** start from the [`lesson-07`](https://github.com/Hendrixer/agents-v2/tree/lesson-07) branch of [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2). The `notes/` folder on that branch has the code you'll write in this chapter.
-
 ## Two Problems, One Chapter
 
 This chapter tackles two related problems:

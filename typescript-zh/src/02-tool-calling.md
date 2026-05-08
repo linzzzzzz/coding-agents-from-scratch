@@ -1,7 +1,5 @@
 # 第 2 章：工具调用
 
-> 💻 **代码：** 从 [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2) 的 [`lesson-02`](https://github.com/Hendrixer/agents-v2/tree/lesson-02) 分支开始。该分支里的 `notes/` 文件夹包含本章会写到的代码。
-
 ## 工具调用如何工作
 
 Tool calling 是把语言模型变成 agent 的关键机制。流程是这样的：

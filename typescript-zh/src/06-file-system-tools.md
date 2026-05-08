@@ -1,7 +1,5 @@
 # 第 6 章：文件系统工具
 
-> 💻 **代码：** 从 [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2) 的 [`lesson-06`](https://github.com/Hendrixer/agents-v2/tree/lesson-06) 分支开始。该分支里的 `notes/` 文件夹包含本章会写到的代码。
-
 ## 给 Agent 一双手
 
 到目前为止，我们的 agent 可以读取文件、列出目录。这已经能回答很多关于代码库的问题，但真正的 agent 还需要能 *改变* 东西。本章会添加 `writeFile` 和 `deleteFile`，也就是会修改文件系统的工具。

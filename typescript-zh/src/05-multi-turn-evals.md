@@ -1,7 +1,5 @@
 # 第 5 章：多轮评测
 
-> 💻 **代码：** 从 [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2) 的 [`lesson-05`](https://github.com/Hendrixer/agents-v2/tree/lesson-05) 分支开始。该分支里的 `notes/` 文件夹包含本章会写到的代码。
-
 ## 超越单轮
 
 Single-turn evals 测试的是工具选择：“给定这个 prompt，LLM 是否选择了正确工具？” 但 agent 是多轮的。真实任务可能需要：

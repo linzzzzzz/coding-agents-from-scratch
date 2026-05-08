@@ -1,7 +1,5 @@
 # Chapter 8: Shell Tool
 
-> 💻 **Code:** start from the [`lesson-08`](https://github.com/Hendrixer/agents-v2/tree/lesson-08) branch of [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2). The `notes/` folder on that branch has the code you'll write in this chapter.
-
 ## The Most Powerful (and Dangerous) Tool
 
 A shell tool turns your agent into something genuinely powerful. With it, the agent can:

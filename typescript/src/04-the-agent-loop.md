@@ -1,7 +1,5 @@
 # Chapter 4: The Agent Loop
 
-> 💻 **Code:** start from the [`lesson-04`](https://github.com/Hendrixer/agents-v2/tree/lesson-04) branch of [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2). The `notes/` folder on that branch has the code you'll write in this chapter.
-
 ## The Heart of an Agent
 
 This is the most important chapter in the book. Everything before this was setup. Everything after builds on this.

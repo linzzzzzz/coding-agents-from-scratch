@@ -1,7 +1,5 @@
 # 第 8 章：Shell 工具
 
-> 💻 **代码：** 从 [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2) 的 [`lesson-08`](https://github.com/Hendrixer/agents-v2/tree/lesson-08) 分支开始。该分支里的 `notes/` 目录包含本章要编写的代码。
-
 ## 最强大，也是最危险的工具
 
 Shell 工具会让你的 agent 真正变得强大。有了它，agent 可以：

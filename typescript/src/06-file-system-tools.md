@@ -1,7 +1,5 @@
 # Chapter 6: File System Tools
 
-> 💻 **Code:** start from the [`lesson-06`](https://github.com/Hendrixer/agents-v2/tree/lesson-06) branch of [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2). The `notes/` folder on that branch has the code you'll write in this chapter.
-
 ## Giving the Agent Hands
 
 So far our agent can read files and list directories. That's useful for answering questions about your codebase, but a real agent needs to *change* things. In this chapter, we'll add `writeFile` and `deleteFile` — tools that modify the filesystem.

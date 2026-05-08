@@ -1,7 +1,5 @@
 # Chapter 3: Single-Turn Evaluations
 
-> 💻 **Code:** start from the [`lesson-03`](https://github.com/Hendrixer/agents-v2/tree/lesson-03) branch of [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2). The `notes/` folder on that branch has the code you'll write in this chapter.
-
 ## Why Evaluate?
 
 You've defined tools and the LLM seems to pick the right ones. But "seems to" isn't good enough. LLMs are probabilistic — they might select the right tool 90% of the time but fail on edge cases. Without evaluations, you won't know until a user hits the bug.

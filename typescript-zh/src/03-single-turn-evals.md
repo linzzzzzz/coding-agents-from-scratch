@@ -1,7 +1,5 @@
 # 第 3 章：单轮评测
 
-> 💻 **代码：** 从 [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2) 的 [`lesson-03`](https://github.com/Hendrixer/agents-v2/tree/lesson-03) 分支开始。该分支里的 `notes/` 文件夹包含本章会写到的代码。
-
 ## 为什么需要评测？
 
 你已经定义了工具，LLM 看起来也能选对工具。但“看起来”还不够。LLM 是概率性的：它可能 90% 的时候选对工具，但在边界情况上失败。如果没有 evaluations，你可能要等到用户真的踩到 bug 才会发现。

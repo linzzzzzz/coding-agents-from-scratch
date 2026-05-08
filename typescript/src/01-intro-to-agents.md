@@ -1,7 +1,5 @@
 # Chapter 1: Introduction to AI Agents
 
-> 💻 **Code:** start from the [`lesson-01`](https://github.com/Hendrixer/agents-v2/tree/lesson-01) branch of [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2). The `notes/` folder on that branch has the code you'll write in this chapter.
-
 ## What is an AI Agent?
 
 A chatbot takes your message, sends it to an LLM, and returns the response. That's one turn — input in, output out.

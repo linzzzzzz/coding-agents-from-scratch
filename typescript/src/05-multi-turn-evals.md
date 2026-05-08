@@ -1,7 +1,5 @@
 # Chapter 5: Multi-Turn Evaluations
 
-> 💻 **Code:** start from the [`lesson-05`](https://github.com/Hendrixer/agents-v2/tree/lesson-05) branch of [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2). The `notes/` folder on that branch has the code you'll write in this chapter.
-
 ## Beyond Single Turns
 
 Single-turn evals test tool selection — "given this prompt, does the LLM pick the right tool?" But agents are multi-turn. A real task might require:

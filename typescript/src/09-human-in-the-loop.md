@@ -1,7 +1,5 @@
 # Chapter 9: Human-in-the-Loop
 
-> 💻 **Code:** start from the [`lesson-09`](https://github.com/Hendrixer/agents-v2/tree/lesson-09) branch of [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2). The `notes/` folder on that branch has the code you'll write in this chapter. The finished app is on the [`done`](https://github.com/Hendrixer/agents-v2/tree/done) branch.
-
 ## The Safety Layer
 
 We've built an agent with seven tools. Four of them can modify your system: writeFile, deleteFile, runCommand, and executeCode. Right now, the agent auto-approves everything — if the LLM requests `deleteFile`, the loop executes it without asking.

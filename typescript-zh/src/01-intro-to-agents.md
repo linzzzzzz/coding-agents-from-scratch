@@ -1,7 +1,5 @@
 # 第 1 章：AI Agent 入门
 
-> 💻 **代码：** 从 [Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2) 的 [`lesson-01`](https://github.com/Hendrixer/agents-v2/tree/lesson-01) 分支开始。该分支里的 `notes/` 文件夹包含本章会写到的代码。
-
 ## 什么是 AI Agent？
 
 Chatbot 会接收你的消息，把它发送给 LLM，然后返回回复。这是一个回合：输入进去，输出回来。
