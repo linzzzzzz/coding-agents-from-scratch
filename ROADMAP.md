@@ -14,7 +14,7 @@ The following material is intentionally not part of the first public release:
 - TypeScript chapters after Chapter 16
 - Other language experiments
 
-These drafts may return once they have the same level of implementation detail, review, and testing guidance as the TypeScript Phase 1 track.
+These drafts may return once they have the same level of implementation detail, review, and testing guidance as the public TypeScript track.
 
 ## Phase 2 Candidates
 

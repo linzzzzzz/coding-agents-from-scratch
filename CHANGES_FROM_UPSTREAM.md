@@ -11,7 +11,7 @@ The goal of this version is to keep the from-scratch teaching style while moving
 
 ## Scope
 
-The first public version focuses on the TypeScript Phase 1 track, Chapters 1-16.
+The first public version focuses on the TypeScript track, Chapters 1-16.
 
 Python, Rust, Go, Java, Vibe Coding, and advanced TypeScript chapters after Chapter 16 are not part of v1. They may return later if they can be maintained with the same level of confidence as the public TypeScript material.
 
@@ -36,6 +36,6 @@ Python, Rust, Go, Java, Vibe Coding, and advanced TypeScript chapters after Chap
 ## Website and Repository Changes
 
 - Revamped the landing page with a production coding-agent focus.
-- Homepage, README, reading guide, build script, and GitHub Pages workflow now expose only the TypeScript Phase 1 track for v1.
+- Homepage, README, build script, and GitHub Pages workflow now expose only the TypeScript track for v1.
 - Archived Python, Rust, Go, Java, Vibe Coding, advanced TypeScript drafts, and local developer notes under ignored local paths.
 - Removed stale references to old GitHub Pages URLs, Frontend Masters wording, upstream Python companion branches, and single-provider setup assumptions from the public v1 surface.
