@@ -4,6 +4,8 @@
 
 # Building Production AI Coding Agents from Scratch
 
+> *Learn it, build it, own it.*
+
 [简体中文](./README.zh-CN.md) | English
 
 A hands-on course for building CLI AI coding agents — tool calling, streaming, evals, file and shell tools, context and memory management, human approval, reliability and security, and production architecture patterns like planning mode and subagents.

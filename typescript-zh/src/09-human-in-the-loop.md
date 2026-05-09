@@ -180,9 +180,10 @@ import { Box, Text, useInput } from 'ink';
 interface InputProps {
   onSubmit: (value: string) => void;
   disabled?: boolean;
+  placeholder?: string;
 }
 
-export function Input({ onSubmit, disabled = false }: InputProps) {
+export function Input({ onSubmit, disabled = false, placeholder }: InputProps) {
   const [value, setValue] = useState('');
 
   useInput((input, key) => {
@@ -211,8 +212,15 @@ export function Input({ onSubmit, disabled = false }: InputProps) {
       <Text color="blue" bold>
         {'> '}
       </Text>
-      <Text>{value}</Text>
-      {!disabled && <Text color="gray">▌</Text>}
+      {value ? (
+        <Text>{value}</Text>
+      ) : (
+        <>
+          {!disabled && <Text color="gray">▌</Text>}
+          {placeholder && <Text dimColor>{placeholder}</Text>}
+        </>
+      )}
+      {value && !disabled && <Text color="gray">▌</Text>}
     </Box>
   );
 }
@@ -505,6 +513,12 @@ interface ActiveToolCall extends ToolCallProps {
   id: string;
 }
 
+const CODE_CAT_LOGO = String.raw`
+ /\_/\
+(-o_o-)
+/ >_ \
+`;
+
 export function App() {
   const { exit } = useApp();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -595,11 +609,20 @@ export function App() {
 
   return (
     <Box flexDirection="column" padding={1}>
-      <Box marginBottom={1}>
-        <Text bold color="magenta">
-          🤖 AI Agent
-        </Text>
-        <Text dimColor> (type "exit" to quit)</Text>
+      <Box
+        borderStyle="round"
+        borderColor="cyan"
+        paddingX={1}
+        marginBottom={1}
+      >
+        <Text color="cyan">{CODE_CAT_LOGO}</Text>
+        <Box flexDirection="column" marginLeft={2}>
+          <Text bold color="magenta">
+            Your Own Coding Agent
+          </Text>
+          <Text color="cyan">learn it, build it, own it</Text>
+          <Text dimColor>(type "exit" to quit)</Text>
+        </Box>
       </Box>
 
       <Box flexDirection="column" marginBottom={1}>
@@ -650,7 +673,15 @@ export function App() {
       </Box>
 
       {!pendingApproval && (
-        <Input onSubmit={handleSubmit} disabled={isLoading} />
+        <Input
+          onSubmit={handleSubmit}
+          disabled={isLoading}
+          placeholder={
+            messages.length === 0
+              ? 'Try "read src/agent/run.ts"'
+              : undefined
+          }
+        />
       )}
 
       <TokenUsage usage={tokenUsage} />

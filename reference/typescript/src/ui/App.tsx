@@ -21,6 +21,12 @@ interface ActiveToolCall extends ToolCallProps {
   id: string;
 }
 
+const CODE_CAT_LOGO = String.raw`
+ /\_/\
+(-o_o-)
+/ >_ \
+`;
+
 export function App() {
   const { exit } = useApp();
   const [messages, setMessages] = useState<Message[]>([]);
@@ -181,11 +187,20 @@ export function App() {
 
   return (
     <Box flexDirection="column" padding={1}>
-      <Box marginBottom={1}>
-        <Text bold color="magenta">
-          🤖 AI Agent
-        </Text>
-        <Text dimColor> (type "exit" to quit)</Text>
+      <Box
+        borderStyle="round"
+        borderColor="cyan"
+        paddingX={1}
+        marginBottom={1}
+      >
+        <Text color="cyan">{CODE_CAT_LOGO}</Text>
+        <Box flexDirection="column" marginLeft={2}>
+          <Text bold color="magenta">
+            Your Own Coding Agent
+          </Text>
+          <Text color="cyan">learn it, build it, own it</Text>
+          <Text dimColor>(type "exit" to quit)</Text>
+        </Box>
       </Box>
 
       <Box flexDirection="column" marginBottom={1}>

@@ -1,5 +1,7 @@
 # 从零构建生产级 AI Coding Agent
 
+> *Learn it, build it, own it.*
+
 这是一份动手指南，带你用 TypeScript 从零构建一个实用的 CLI coding agent。指南会覆盖工具调用、评测、上下文管理、OpenAI-compatible provider，以及 Human-in-the-Loop 安全机制。
 
 > 灵感来自 [sivakarasala/building-ai-agents](https://github.com/sivakarasala/building-ai-agents)、[Hendrixer/agents-v2](https://github.com/Hendrixer/agents-v2)、[OpenCode](https://opencode.ai/) 和 [Claude Code](https://code.claude.com/docs/en/overview)。这个版本把学习路径扩展到更接近生产级 coding agent 的方向，并加入 OpenAI-compatible provider、更清晰的说明、问题修复和新的网页体验。

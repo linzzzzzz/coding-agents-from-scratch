@@ -4,6 +4,8 @@
 
 # 从零构建生产级 AI Coding Agent
 
+> *Learn it, build it, own it.*
+
 [English](./README.md) | 简体中文
 
 一份动手指南，带你从零实现一个 CLI AI coding agent —— 覆盖工具调用、流式输出、评测、文件与 Shell 工具、上下文与记忆管理、人工审批、可靠性与安全，以及 planning mode、subagents 等生产级架构模式。
