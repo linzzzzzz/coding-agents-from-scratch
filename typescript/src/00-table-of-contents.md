@@ -110,7 +110,7 @@ Delegate bounded work to specialized agents, closer to OpenCode and Claude Code'
 
 This track ends at Chapter 16. Draft chapters for sessions, diff-based editing, permission rules, advanced shell execution, MCP/plugins, provider profiles, context engines, production UI, advanced subagents, and fixture-based evals are held back for a future track.
 
-See the [Roadmap section of the README](../../README.md#roadmap) for what's planned next.
+See the [Roadmap section of the README](../../README.en.md#roadmap) for what's planned next.
 
 ---
 

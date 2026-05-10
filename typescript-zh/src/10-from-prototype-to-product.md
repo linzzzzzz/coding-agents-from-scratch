@@ -119,4 +119,4 @@
 
 ---
 
-继续读到第 16 章即可完成本系列。后续主题记录在 [README 的 Roadmap 部分](../../README.zh-CN.md#roadmap)。
+继续读到第 16 章即可完成本系列。后续主题记录在 [README 的 Roadmap 部分](../../README.md#roadmap)。

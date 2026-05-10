@@ -110,7 +110,7 @@
 
 本系列在第 16 章结束。关于 sessions、diff-based editing、permission rules、advanced shell execution、MCP/plugins、provider profiles、context engines、production UI、advanced subagents 和 fixture-based evals 的草稿章节，会保留到后续系列。
 
-计划中的下一阶段请查看 [README 中的 Roadmap 部分](../../README.zh-CN.md#roadmap)。
+计划中的下一阶段请查看 [README 中的 Roadmap 部分](../../README.md#roadmap)。
 
 ---
 

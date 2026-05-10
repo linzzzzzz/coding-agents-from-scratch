@@ -1,6 +1,6 @@
 # TypeScript Reference Implementation
 
-This is the finished TypeScript implementation for [Building Production AI Coding Agents from Scratch](../../README.md).
+This is the finished TypeScript implementation for [Building Production AI Coding Agents from Scratch](../../README.en.md).
 
 Use it to compare against your own code, debug a chapter, or run the completed CLI coding agent locally.
 
