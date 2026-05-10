@@ -41,6 +41,12 @@ A CLI coding agent that:
 - Ships with single-turn and multi-turn evals plus integration tests against real tools
 - Works with any OpenAI-compatible provider — not locked to a single vendor
 
+<p align="center">
+  <img src="./assets/terminal-demo.gif" alt="Your Own Coding Agent terminal walkthrough" width="100%">
+</p>
+
+<p align="center"><em>Terminal UI from the TypeScript reference implementation.</em></p>
+
 ## Table of Contents
 
 | Part | Chapter |

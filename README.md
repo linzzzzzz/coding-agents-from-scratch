@@ -41,6 +41,12 @@
 - 内置单轮、多轮评测，以及面向真实工具的集成测试
 - 兼容任意 OpenAI-compatible provider，不绑定单一厂商
 
+<p align="center">
+  <img src="./assets/terminal-demo.gif" alt="Your Own Coding Agent terminal walkthrough" width="100%">
+</p>
+
+<p align="center"><em>TypeScript 参考实现中的终端 UI。</em></p>
+
 ## 指南目录
 
 | 部分 | 章节 |
